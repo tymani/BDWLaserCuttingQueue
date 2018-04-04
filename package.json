@@ -1,0 +1,23 @@
+{
+  "name": "bdwlasercuttingqueue",
+  "version": "1.0.0",
+  "description": "CS132 Final Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmfaulkner/BDWLaserCuttingQueue.git"
+  },
+  "author": "Nick Faulkner, Ty Ratchford, Nadia Lahlaf, Jaisung Huh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nmfaulkner/BDWLaserCuttingQueue/issues"
+  },
+  "homepage": "https://github.com/nmfaulkner/BDWLaserCuttingQueue#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
