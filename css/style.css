@@ -1,0 +1,166 @@
+@font-face {
+  font-family: 'Avenir-Black';
+  src: url('fonts/AvenirLTStd-Black.otf');
+}
+@font-face {
+  font-family: 'Avenir-Italic';
+  src: url('fonts/AvenirLTStd-HeavyOblique.otf');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/Roboto-Regular.ttf');
+}
+body {
+  margin: 0;
+}
+.logo-content {
+  margin-right: auto;
+}
+
+.join-queue-container {
+  margin-left: auto;
+}
+
+.header-scroll {
+  position: fixed;
+  width: 100vw;
+}
+
+#join-queue-form {
+  margin: 30px;
+}
+
+#join-queue-form input {
+  display: block;
+  cursor: pointer;
+  border: 1px solid black;
+  padding: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: white;
+
+  font-family: 'Roboto';
+  font-size: 16px;
+}
+.logo-text {
+  font-family: 'Avenir-Black';
+  font-size: 20px;
+}
+
+.logo-text-container {
+  margin: 30px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  height: 20vh;
+  background: white;
+  /* animation: header-move-up 1200ms ease-in-out forward; */
+}
+
+@keyframes header-move-up {
+  100% {
+    transform: translateY(-20vh);
+  }
+}
+
+.queue-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+
+
+
+.time-background-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.timer-school-blocks {
+  display: flex;
+  flex-direction: row;
+}
+
+.timer-school-blocks form button {
+  border: none;
+  font-family: 'Roboto';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  width: 180px;
+  height: 30px;
+}
+
+#timer-other-form {
+
+}
+
+#timer-brown-button:focus, #timer-other-button:focus {
+  outline : 0;
+}
+
+.non-active-timer {
+  border: 1px solid white;
+}
+
+.timer-time {
+  font-family: "Avenir-Italic";
+  font-size: 50px;
+  color: white;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+}
+
+.timer-time div {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.timer-blocks-total {
+  margin: 10px;
+}
+
+
+
+.timer-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+.queue-table {
+  margin: 20px;
+  border-collapse: collapse;
+  width: 70vw;
+}
+
+.queue-header {
+  font-family: 'Avenir-Black';
+}
+.queue-header-elem {
+  width: 23.3vw;
+  padding: 10px;
+}
+
+
+
+
+.queue-elem-container {
+  font-family: "Roboto";
+  border: 1px solid black;
+  text-align: center;
+  height: 50px;
+
+}
