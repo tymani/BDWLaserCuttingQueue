@@ -15,12 +15,27 @@ app.set('view engine', 'html'); //register .html extension as template engine so
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
+var q = [];
+
 app.get('/', function(request, response){
   response.sendFile(path.join(__dirname + '/index.html'));
 });
 
-app.post("/joinqueue", function(request, response){
-  response.render('index.html', {form:true})
+// app.post("/joinqueue", function(request, response){
+//   response.render('index.html', {form:true})
+// });
+
+io.sockets.on('connection', function(socket) {
+  socket.on('join', function(userid, callback) {
+    socket.id = userid;
+
+    q.unshift(userid);
+
+    callback(q);
+
+    socket.broadcast.emit('joined', socket.name);
+  });
+
 });
 
 

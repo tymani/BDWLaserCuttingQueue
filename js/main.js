@@ -1,3 +1,5 @@
+var socket = io.connect();
+
 $(document).ready(() => {
   //change timer
   //brown timer starts active
@@ -24,9 +26,11 @@ $(document).ready(() => {
       $("header").removeClass("header-scroll");
     }
   });
-
-
   //form adding
   //$("#join-queue-form").submit()
+
+  socket.emit('join', userID, function(q) {
+    //TODO q is the queue that has been sent from the server
+  });
 
 });
