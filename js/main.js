@@ -25,4 +25,8 @@ $(document).ready(() => {
     }
   });
 
+
+  //form adding
+  //$("#join-queue-form").submit()
+
 });
