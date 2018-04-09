@@ -21,6 +21,8 @@
     "body-parser": "^1.18.2",
     "consolidate": "^0.15.1",
     "express": "^4.16.3",
-    "hogan.js": "^3.0.2"
+    "hogan.js": "^3.0.2",
+    "http": "0.0.0",
+    "socket.io": "^2.1.0"
   }
 }
