@@ -146,3 +146,12 @@
 	</body>
 
 </html>
+
+<script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+<script>
+window.onLoadCallback = function(){
+  gapi.auth2.init({
+      client_id: '182582283365-7bolngrakho8a39q5qg8po10kirb684f.apps.googleusercontent.com'
+    });
+}
+</script>

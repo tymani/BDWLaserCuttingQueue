@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+const nodemailer = require('nodemailer');
+const xoauth2 = require('xoauth2')
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:false}));
@@ -18,6 +20,38 @@ app.get('/', function(request, response){
 
 app.post("/joinqueue", function(request, response){
   response.render('index.html', {form:true})
+});
+
+nodemailer.createTestAccount((err, account) => {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'nmfaulkner@gmail.com',
+        pass: 'westhill5'
+      }
+    });
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Nick Faulkner" <nmfaulkner@gmail.com>', // sender address
+        to: 'nicholas_faulkner@brown.edu', // list of receivers
+        subject: 'Hello ✔', // Subject line
+        text: 'Hello world?', // plain text body
+        html: '<b>Hello world?</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+
+        else{
+          console.log("Message Sent");
+        }
+
+    });
 });
 
 
