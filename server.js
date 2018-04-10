@@ -28,7 +28,7 @@ nodemailer.createTestAccount((err, account) => {
       service: 'gmail',
       auth: {
         user: 'nmfaulkner@gmail.com',
-        pass: 'westhill5'
+        pass: 'xxxxxx'
       }
     });
 
