@@ -86,9 +86,6 @@ $(document).ready(() => {
       });
     }
 
-
-
-
   }, function () {
     $(document).unbind();
 
@@ -102,6 +99,26 @@ $(document).ready(() => {
     hiddenMessage.addClass("hidden");
   });
 
+//checkbox logic on form
+$("label#brown-school-checkbox").click(function (){
+  if($("#brown-school-checkbox input")[0].checked) {
+    $("#other-checkbox input")[0].checked = false;
+  }
+
+});
+$("label#other-checkbox").click(function (){
+  if($("#other-checkbox input")[0].checked) {
+    $("#brown-school-checkbox input")[0].checked = false;
+  }
+});
+
+//form submission
+$("#form-submit-form").submit(submitForm);
+
+function submitForm (event) {
+  event.preventDefault();
+  console.log("add to queue!");
+}
 
 
 });
