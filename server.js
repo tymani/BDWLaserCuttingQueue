@@ -22,37 +22,37 @@ app.post("/joinqueue", function(request, response){
   response.render('index.html', {form:true})
 });
 
-nodemailer.createTestAccount((err, account) => {
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'bdwautomation@gmail.com',
-        pass: 'xxxx'
-      }
-    });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
-        to: 'nicholas_faulkner@brown.edu', // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-        html: '<b>Hello world?</b>' // html body
-    };
-
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-
-        else{
-          console.log("Message Sent");
-        }
-
-    });
-});
+// nodemailer.createTestAccount((err, account) => {
+//     // create reusable transporter object using the default SMTP transport
+//     let transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: 'bdwautomation@gmail.com',
+//         pass: 'xxxx'
+//       }
+//     });
+//
+//     // setup email data with unicode symbols
+//     let mailOptions = {
+//         from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
+//         to: 'nicholas_faulkner@brown.edu', // list of receivers
+//         subject: 'Hello ✔', // Subject line
+//         text: 'Hello world?', // plain text body
+//         html: '<b>Hello world?</b>' // html body
+//     };
+//
+//     // send mail with defined transport object
+//     transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//             return console.log(error);
+//         }
+//
+//         else{
+//           console.log("Message Sent");
+//         }
+//
+//     });
+// });
 
 
 
