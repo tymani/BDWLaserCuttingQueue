@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var http = require('http');
+var anyDB = require('any-db');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2')
 
@@ -13,9 +15,26 @@ app.engine('html', engines.hogan); // tell Express to run .html files through Ho
 app.set('views', __dirname + '/templates'); // tell Express where to find templates, in this case the '/templates' directory
 app.set('view engine', 'html'); //register .html extension as template engine so we can render .html pages
 
+var conn = anyDB.createConnection('sqlite3://db/users.db');
+
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+
+var q = [];
 
 app.get('/', function(request, response){
   response.sendFile(path.join(__dirname + '/index.html'));
+});
+
+// Function that handles user signup.
+// Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
+// Inserts the credentials to server database and notifies the user if failed.
+app.post('/userJoin', function(req, res) {
+  var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
+  conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
+    if (err) res.status(500).render("Something went wrong. Try again");
+    else res.render('index.html', {form:true});
+  });
 });
 
 app.post("/joinqueue", function(request, response){
@@ -54,8 +73,33 @@ app.post("/joinqueue", function(request, response){
 //     });
 // });
 
+io.sockets.on('connection', function(socket) {
+  socket.on('join', function(userid, time, school, length, pnum, email, file, callback) {
+    socket.broadcast.emit('joined', socket.name);
+
+    socket.id = userid;
+    var cred = {
+      'userid': userid,
+      'time': time,
+      'school': school,
+      'length' : length,
+      'phone_number': pnum,
+      'email' : email,
+      'file' : file
+    };
+
+    q.unshift(cred);
+
+    callback(q);
+  });
+
+});
 
 
-app.listen(8080, function(){
+server.listen(8080, function(){
   console.log("Listening on Port 8080");
 });
+
+// app.listen(8080, function(){
+//   console.log("Listening on Port 8080");
+// });
