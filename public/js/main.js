@@ -28,6 +28,7 @@ $(document).ready(() => {
     }
   });
 
+  var socket = io.connect();
 
   //form appear
   $("#join-queue-button").click(function() {
