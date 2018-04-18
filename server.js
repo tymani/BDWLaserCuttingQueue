@@ -23,7 +23,7 @@ var q = [];
 app.get('/', function(request, response){
     console.log('- Request received:', request.method, request.url);
     response.sendFile(path.join(__dirname + '/index.html'));
-
+});
 
 // Function that handles user signup.
 // Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
