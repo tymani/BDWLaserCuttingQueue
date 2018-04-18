@@ -26,6 +26,7 @@
     "hogan.js": "^3.0.2",
     "node-mailjet": "^3.2.1",
     "nodemailer": "^4.6.4",
+    "socket.io": "^2.1.0",
     "xoauth2": "^1.2.0"
   }
 }

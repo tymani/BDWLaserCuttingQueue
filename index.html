@@ -2,10 +2,10 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="css/style.css">
-		<script src="js/jquery-2.1.1.js"></script>
-		<script src="js/main.js"></script>
-		<link href="img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
+		<link rel="stylesheet" href="public/css/style.css">
+		<script src="public/js/jquery-2.1.1.js"></script>
+		<script src="public/js/main.js"></script>
+		<link href="public/img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
 		<title> BDW Lasercuttering Queue </title>
 	</head>
 	<body>
@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<div class="join-queue-container">
-					<img id="bdw-logo" src="img/bdw-logo.png">
+					<img id="bdw-logo" src="public/img/bdw-logo.png">
 					<form class="join-queue-form" id="join-queue-form">
 						<input class="join-queue-button" id="join-queue-button" value="Join Queue" type="button">
 					</form>
@@ -58,66 +58,70 @@
 							<th class="queue-header-elem">Lasercutter</th>
 							<th class="queue-header-elem">Length of Cut</th>
 						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
-						<tr class="queue-elem-container">
-							<td class="queue-elem">Jane Doe</td>
-							<td class="queue-elem">Lasercutter 1</td>
-							<td class="queue-elem">30 mins</td>
-						</tr>
+						<tbody class="brown-queue-elems-container">
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+							<tr class="queue-elem-container">
+								<td class="queue-elem">Jane Doe</td>
+								<td class="queue-elem">Lasercutter 1</td>
+								<td class="queue-elem">30 mins</td>
+							</tr>
+						</tbody>
+							<tbody class="other-queue-elems-container">
+								<tr class="queue-elem-container">
+									<td class="queue-elem">Jane Doe</td>
+									<td class="queue-elem">Lasercutter 1</td>
+									<td class="queue-elem">30 mins</td>
+								</tr>
+								<tr class="queue-elem-container">
+									<td class="queue-elem">Jane Doe</td>
+									<td class="queue-elem">Lasercutter 1</td>
+									<td class="queue-elem">30 mins</td>
+								</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -129,7 +133,7 @@
 			<div class="form-header">
 				<div class="form-title">Join Queue</div>
 				<div class="form-exit">
-					<img id="form-exit-button" src="img/cancel.png">
+					<img id="form-exit-button" src="public/img/cancel.png">
 				</div>
 			</div>
 			<div class="form-divider"></div>
