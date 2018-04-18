@@ -36,9 +36,7 @@ app.post('/userJoin', function(req, res) {
   });
 });
 
-app.post("/joinqueue", function(request, response){
-  response.render('index.html', {form:true})
-});
+
 
 // nodemailer.createTestAccount((err, account) => {
 //     // create reusable transporter object using the default SMTP transport
@@ -91,6 +89,8 @@ io.sockets.on('connection', function(socket) {
 
     callback(q);
   });
+
+});
 
 // app.listen(8080, function(){
 //   console.log("Listening on Port 8080");
