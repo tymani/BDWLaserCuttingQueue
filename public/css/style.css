@@ -19,6 +19,7 @@ body {
 .body-content {
   z-index: -1;
   position: relative;
+  margin-bottom: 30px;
 }
 .logo-content {
   margin-right: auto;
@@ -470,4 +471,21 @@ display: none;
 
 .selected {
   background-color: #e5e5e5;
+}
+
+footer {
+  height: 5vh;
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid black;
+}
+
+footer iframe {
+  margin: 40px;
+}
+
+footer p {
+  font-family: "Roboto-Regular";
+  margin: 40px;
+  margin-right: 0px;
 }
