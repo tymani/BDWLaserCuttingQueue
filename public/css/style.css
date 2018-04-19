@@ -37,7 +37,7 @@ body {
 }
 
 .join-queue-form {
-  margin: 30px;
+  margin: 20px;
 }
 
 .join-queue-form input {
@@ -201,12 +201,12 @@ header {
 }
 
 .form-content-box {
-  top: 80px;
+  top: 30px;
   margin: auto;
   position: relative;
   z-index: 3;
   width: 550px;
-  height: 550px;
+  height: 600px;
   background-color: white;
   box-shadow: 0 5px 20px rgba(0,0,0,.40);
 }
@@ -478,6 +478,7 @@ footer {
   display: flex;
   flex-direction: row;
   border-top: 1px solid black;
+
 }
 
 footer iframe {
@@ -488,4 +489,15 @@ footer p {
   font-family: "Roboto-Regular";
   margin: 40px;
   margin-right: 0px;
+}
+
+.form-name-module {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#form-name-form {
+  margin-left: 20px;
 }

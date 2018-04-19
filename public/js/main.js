@@ -116,11 +116,41 @@ $("#form-submit-button").click(submitForm);
 
 function submitForm () {
   //check that necessary parts of form are filled in
+  var validForm = false;
+  var brownCheckbox = $("#brown-school-checkbox input")[0].checked;
+  var otherCheckbox = $("#other-checkbox input")[0].checked;
+  var emailInput = $("#form-email-form input").val();
+  var selectedTime = $("select option:selected").val();
+  var selectTimeDefault = "Select Approx Time";
+  var nameInput = $("#form-name-form input").val();
+
+  if ((brownCheckbox || otherCheckbox) && validateEmail(emailInput) && selectedTime != selectTimeDefault && nameInput != "") {
+    //a checkbox is marked
+    //check that email is valid
+    //check that dropdown is chosen
+    //THIS FUNCTION SHOULD CALL TIMING FUNCTIONS TO DECIDE WHICH LASERCUTTER TO GO TO
+    if(brownCheckbox) {
+      //add to queue
+      addToQueue(nameInput, "Lasercutter 2", selectedTime, true);
+    } else {
+      //add to queue
+      addToQueue(nameInput, "Lasercutter 2", selectedTime, false);
+    }
+
+    validForm = true;
+
+  }
+
+  if(!validForm) {
+    //show necessary false stuff
+    alert("Please fill out all of form");
+  }
+  //run notification functions
+
   //close form
   formDisappear();
 
-  //add to queue
-  addToQueue("John Doe", "Lasercutter 2", "3 mins");
+
 }
 
 function addToQueue(name,lasercutter,cutLength,isBrown) {
@@ -130,7 +160,18 @@ function addToQueue(name,lasercutter,cutLength,isBrown) {
                         "<td class='queue-elem'>"+cutLength+"</td>"+
                     "</tr>"
 
-  $(".queue-table tbody.brown-queue-elems-container").append(newQueueElem);
+  if(isBrown) {
+    $(".queue-table tbody.brown-queue-elems-container").append(newQueueElem);
+  } else {
+    $(".queue-table tbody.other-queue-elems-container").append(newQueueElem);
+  }
+}
+
+function validateEmail(email) {
+  //placeholder Function
+  return (email != "")
+
+
 }
 
 function formDisappear() {
