@@ -33,7 +33,7 @@ $(document).ready(() => {
   //form appear
   $("#join-queue-button").click(function() {
     $(".home-content").removeClass("stack-behind");
-     $("#form-page").removeClass("hidden");
+     $(".form-page").removeClass("hidden");
   })
 
   //form disappear
@@ -176,7 +176,7 @@ function validateEmail(email) {
 
 function formDisappear() {
   $(".home-content").addClass("stack-behind");
-  $("#form-page").addClass("hidden");
+  $(".form-page").addClass("hidden");
 }
 
 });

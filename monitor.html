@@ -5,7 +5,7 @@
 		<link rel="stylesheet" href="public/css/style.css">
 		<script src="public/js/jquery-2.1.1.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="public/js/main.js"></script>
+		<script src="public/js/monitor.js"></script>
 		<link href="public/img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
 		<title> BDW Lasercuttering Queue </title>
 	</head>
@@ -136,90 +136,6 @@
 				<iframe src="https://ghbtns.com/github-btn.html?user=nmfaulkner&repo=BDWLasercuttingQueue&type=star&count=true" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
 			</footer>
 	</div>
-  <!-- {{#form}} -->
-	<div class="form-page hidden" >
-		<div class="form-background"></div>
-		<div class="form-content-box">
-			<div class="form-header">
-				<div class="form-title">Join Queue</div>
-				<div class="form-exit">
-					<img id="form-exit-button" src="public/img/cancel.png">
-				</div>
-			</div>
-			<div class="form-divider"></div>
-			<div class="form-body">
-				<div class="form-name-module">
-					<div class="form-label-title">Name</div>
-					<form id="form-name-form">
-						<input type="text">
-					</form>
-				</div>
-				<div class="form-school-module">
-					<div class="form-label-title">School</div>
-					<div class="form-body-checkbox-button-container">
-						<label id="brown-school-checkbox" class="form-checkbox-label"> Brown
-							<input type="checkbox">
-							<span class="checkmark"></span>
-						</label>
-						<label id="other-checkbox" class="form-checkbox-label"> Other
-							<input type="checkbox">
-							<span class="checkmark"></span>
-						</label>
-					</div>
-				</div>
-				<div class="form-email-module">
-					<div class="form-label-title">Email</div>
-					<form id="form-email-form">
-						<input type="text">
-					</form>
-				</div>
-				<div class="form-cut-length-module">
-					<div class="form-label-title">Length of Cut</div>
-					<div class="form-drop-down-container">
-					  <label>
-					      <select>
-					          <option selected> Select Approx Time </option>
-					          <option>5 mins</option>
-					          <option>10 mins</option>
-					          <option>15 mins</option>
-										<option>20 mins</option>
-					          <option>25 mins</option>
-					          <option>30 mins</option>
-					      </select>
-					  </label>
-					</div>
-				</div>
-				<div class="form-notification-module">
-					<div class="form-label-title">Notification</div>
-					<div class="form-body-checkbox-button-container">
-						<label id="phone-notification-checkbox" class="form-checkbox-label"> Phone
-							<input type="checkbox">
-							<span class="checkmark"></span>
-						</label>
-						<label id="email-notification-checkbox" class="form-checkbox-label"> Email
-							<input type="checkbox">
-							<span class="checkmark"></span>
-						</label>
-					</div>
-				</div>
-				<div class="form-file-upload-module">
-					<div class="form-label-title">File Upload</div>
-					<form id="form-file-upload-form">
-						<input id="form-file-upload-button" type="file" name="ai-file" accept=".ai">
-					</form>
-				</div>
-			</div>
-			<div class="form-divider"></div>
-			<div class="form-footer">
-				<div class="form-submit-container">
-					<form class="join-queue-form" id="form-submit-form">
-							<input class="join-queue-button" id="form-submit-button" value="Join Queue" type="button">
-					</form>
-				</div>
-			</div>
-		</div>
-</div>
-	<!-- {{/form}} -->
 	</body>
 
 </html>

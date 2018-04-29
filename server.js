@@ -11,6 +11,27 @@ const xoauth2 = require('xoauth2');
 var io = require('socket.io').listen(server);
 server.listen(8080);
 
+
+/*******************************************/
+/*          Server Queue Logic            */
+/******************************************/
+
+/*********** Queue Elem Class ********/
+
+
+class QueueElem {
+  constructor (name, email, lengthOfCut) {
+    this.name = name;
+    this.email = email;
+    this.lengthOfCut = lengthOfCut;
+  }
+}
+
+
+var masterQueueList = new Array()
+
+
+
 app.use("/", express.static(__dirname));
 
 var conn = anyDB.createConnection('sqlite3://db/users.db');
@@ -23,6 +44,11 @@ var q = [];
 app.get('/', function(request, response){
     console.log('- Request received:', request.method, request.url);
     response.sendFile(path.join(__dirname + '/index.html'));
+});
+
+app.get('/monitor', function(request, response){
+    console.log('- Request received:', request.method, request.url);
+    response.sendFile(path.join(__dirname + '/monitor.html'));
 });
 
 // Function that handles user signup.
