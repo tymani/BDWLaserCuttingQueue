@@ -11,27 +11,6 @@ const xoauth2 = require('xoauth2');
 var io = require('socket.io').listen(server);
 server.listen(8080);
 
-
-/*******************************************/
-/*          Server Queue Logic            */
-/******************************************/
-
-/*********** Queue Elem Class ********/
-
-
-class QueueElem {
-  constructor (name, email, lengthOfCut) {
-    this.name = name;
-    this.email = email;
-    this.lengthOfCut = lengthOfCut;
-  }
-}
-
-
-var masterQueueList = new Array()
-
-
-
 app.use("/", express.static(__dirname));
 
 var conn = anyDB.createConnection('sqlite3://db/users.db');
@@ -97,7 +76,9 @@ app.post('/userJoin', function(req, res) {
 // });
 
 io.sockets.on('connection', function(socket) {
-  socket.on('join', function(userid, time, school, length, pnum, email, file, callback) {
+  socket.on('join', function(userid, time, school, length, pnum, email, file, callback) {// I think that the server should make the userids
+    // I also think that we don't need file, or School
+    //also just clarifying is time the time the user joined the queue?
     socket.broadcast.emit('joined', socket.name);
 
     socket.id = userid;
@@ -105,7 +86,7 @@ io.sockets.on('connection', function(socket) {
       'userid': userid,
       'time': time,
       'school': school,
-      'length' : length,
+      'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
       'email' : email,
       'file' : file

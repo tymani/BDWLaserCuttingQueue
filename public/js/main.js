@@ -179,4 +179,166 @@ function formDisappear() {
   $(".form-page").addClass("hidden");
 }
 
+
+
+
+/*******************************************/
+/*         Client Time Logic              */
+/******************************************/
+
+
+
+var socket = io.connect();
+
+var userId = -1;
+
+var ticking = null;
+
+var currHour = 0;
+var currMin = 0;
+
+
+changeTimer(60);
+//each queue element has the following attributes
+// userid
+//time
+//length
+//phone number
+//email
+var masterQueueList = new Array()
+
+socket.on("queue", function(queue){ // what is the type of the list
+  //first element in list is current user
+  //make ticking timer with total time in list
+  var timeRemaining = 0;
+
+  for(var i = 0; i < queue.length; i++) {
+    if(queue[i].userid != userId) {
+      timeRemaining += queue[i].cut_length;
+    } else {
+      break;
+    }
+
+  }
+
+  updateTimer(timeRemaining);
+
+  //print rest of list
+  //mark our current user in the list
+
+
+});
+// updates the current time on the timer
+//timeRemaining : time remaining until user can sign up
+function updateTimer(timeRemaining) {
+  //change the current timer time remaining to new timeRemaining
+  changeTimer(timeRemaining);
+
+}
+
+function changeTimer(newTime) {
+  var timer = $(".timer-time")[0];
+  //stop old timer
+  stopTickingTimer();
+
+
+  var minutes = 0;
+  var hours = 0;
+  //newTime is in minutes
+  //find out if hours units are required
+  if(newTime >= 60) {
+    hours = Math.floor(newTime / 60);
+    minutes = newTime - (hours * 60);
+
+  } else {
+    minutes = newTime;
+  }
+
+  //print out new timer
+  printTimer(hours,minutes);
+
+  //set global variables
+  currMin = minutes;
+  currHour = hours;
+
+  //start ticking timer
+  ticking = setInterval(function () {tickingTimer();}, 60000);
+
+
+
+}
+
+
+function printTimer(hours, minutes) {
+  var timer = $(".timer-time");
+  //remove current time
+  while (timer[0].hasChildNodes()) {
+    timer[0].removeChild(timer[0].lastChild);
+  }
+
+  var hourUnits = "";
+  var minuteUnits = "";
+
+  if(minutes > 1) {
+    minuteUnits = " mins";
+  } else {
+    minuteUnits = " min";
+  }
+
+  if (hours > 0) {
+
+    if(hours > 1) {
+      hourUnits  = " hrs";
+    } else {
+      hourUnits = " hr";
+    }
+    var printHours = "<div class='timer-time-hours'>" + hours + hourUnits + "</div>";
+
+    if (minutes > 0) {
+      var printMinutes = "<div class='timer-time-hours'>" + minutes + minuteUnits + "</div>";
+      timer.append(printMinutes);
+    }
+
+    timer.append(printHours);
+
+  } else {
+
+    var printMinutes = "<div class='timer-time-hours'>" + minutes + " mins" + "</div>";
+    timer.append(printMinutes);
+
+  }
+}
+
+function tickingTimer() {
+
+  if(currMin > 0) {
+    currMin--;
+  } else if (currHour > 0) {
+    currHour--;
+    currMin = 59;
+  } else {
+    stopTickingTimer();
+    printEmptyQueuePage();
+    return;
+  }
+
+
+  printTimer(currHour, currMin);
+}
+
+function stopTickingTimer() {
+  if(ticking != null) {
+    clearInterval(ticking);
+  }
+}
+
+function printEmptyQueuePage() {
+  console.log("TBD");
+}
+
+
+//make timeremaingin function
+//make lasercutter assignment fucntion
+//every client is updated with who currently at the
+
 });
