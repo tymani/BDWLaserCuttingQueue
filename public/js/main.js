@@ -28,7 +28,18 @@ $(document).ready(() => {
     }
   });
 
+  // Socket connects and logic
   var socket = io.connect();
+
+  socket.on('joined', function(queue) {
+
+  });
+
+  socket.on('deleted', function(queue) {
+
+
+  });
+
 
   //form appear
   $("#join-queue-button").click(function() {
@@ -153,6 +164,12 @@ function submitForm () {
 
 }
 
+//TODO This is a function that will take care of rendering the new state of the queue
+function renderQ(queue) {
+  var thisname = getMeta('username');
+
+}
+
 function addToQueue(name,lasercutter,cutLength,isBrown) {
   var newQueueElem = "<tr class='queue-elem-container selected'>"+
                         "<td class='queue-elem'>"+name+"</td>"+
@@ -172,6 +189,13 @@ function validateEmail(email) {
   return (email != "")
 
 
+}
+
+function getMeta(name) {
+  var tag = document.querySelector('meta[name=' + name + ']');
+  if (tag != null)
+    return tag.content;
+  return '';
 }
 
 function formDisappear() {
