@@ -57,13 +57,16 @@ var q = [];
 // });
 
 io.sockets.on('connection', function(socket) {
-  socket.on('join', function(userid, time, school, length, pnum, email, file) {
+  socket.on('join', function(userid, time, school, length, pnum, email, file, callback) {// I think that the server should make the userids
+    // I also think that we don't need file, or School
+    //also just clarifying is time the time the user joined the queue?
+    socket.broadcast.emit('joined', socket.name);
 
     var cred = {
       'userid': userid,
       'time': time,
       'school': school,
-      'length' : length,
+      'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
       'email' : email
     };
