@@ -31,13 +31,21 @@ $(document).ready(() => {
   // Socket connects and logic
   var socket = io.connect();
 
-  socket.on('joined', function(queue) {
-
+  // Server emits this on connection to give initial state of the queue
+  socket.on('handshake', function(queue) {
+    renderQ(queue);
   });
 
-  socket.on('deleted', function(queue) {
+  // Server emits this whenever new client connects
+  socket.on('joined', function(queue) {
+    renderQ(queue);
+  });
 
-
+  socket.on('deleted', function(username, queue) {
+    renderQ(queue);
+    if (username == getMeta('username')) {
+        //TODO This client has been removed from queue.
+    }
   });
 
 
