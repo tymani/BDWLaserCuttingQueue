@@ -180,6 +180,18 @@ function formDisappear() {
 }
 
 
+//phone number checkbox clicked
+$("#phone-notification-checkbox input").click(function () {
+  //make phone number appear if checked
+  //make disappear if unchecked
+  if($("#phone-notification-checkbox input")[0].checked) {
+    $(".phone-number-module").removeClass("hidden");
+    $(".form-content-box").css("height", "400px");
+  } else {
+    $(".phone-number-module").addClass("hidden");
+    $(".form-content-box").css("height", "320px");
+  }
+});
 
 
 /*******************************************/

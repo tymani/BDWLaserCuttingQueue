@@ -38,6 +38,7 @@ body {
 
 .join-queue-form {
   margin: 20px;
+  margin-right: 50px;
 }
 
 .join-queue-form input {
@@ -98,6 +99,7 @@ header {
   background-color: black;
   padding-top: 10px;
   padding-bottom: 10px;
+  width: 360px;
 }
 
 .timer-school-blocks {
@@ -201,12 +203,12 @@ header {
 }
 
 .form-content-box {
-  top: 30px;
+  top: 150px;
   margin: auto;
   position: relative;
   z-index: 3;
   width: 550px;
-  height: 600px;
+  height: 320px;
   background-color: white;
   box-shadow: 0 5px 20px rgba(0,0,0,.40);
 }
@@ -327,6 +329,14 @@ header {
   justify-content: flex-start;
 }
 
+
+.phone-number-module {
+  margin: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
 
 
 .form-body-checkbox-button-container{
@@ -508,6 +518,7 @@ footer p {
   width: 100px;
   position: absolute;
   top: 15vh;
+  right: 70px;
 }
 
 .join-queue-form-container {
@@ -521,7 +532,7 @@ footer p {
   height: 0;
   border-left: 11px solid transparent;
   border-right: 11px solid transparent;
-
+  right: 107px;
   border-bottom: 11px solid black;
   top: 14vh;
   position: absolute;
