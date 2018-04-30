@@ -9,7 +9,9 @@ const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
 
 var io = require('socket.io').listen(server);
-server.listen(8080);
+server.listen(8080, function () {
+  console.log("Listening on port 8080")
+});
 
 app.use("/", express.static(__dirname));
 
@@ -19,27 +21,6 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var q = [];
-
-app.get('/', function(request, response){
-    console.log('- Request received:', request.method, request.url);
-    response.sendFile(path.join(__dirname + '/index.html'));
-});
-
-app.get('/monitor', function(request, response){
-    console.log('- Request received:', request.method, request.url);
-    response.sendFile(path.join(__dirname + '/monitor.html'));
-});
-
-// Function that handles user signup.
-// Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
-// Inserts the credentials to server database and notifies the user if failed.
-app.post('/userJoin', function(req, res) {
-  var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
-  conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
-    if (err) res.status(500).render("Something went wrong. Try again");
-    else res.render('index.html', {form:true});
-  });
-});
 
 
 
@@ -81,24 +62,53 @@ io.sockets.on('connection', function(socket) {
     //also just clarifying is time the time the user joined the queue?
     socket.broadcast.emit('joined', socket.name);
 
-    socket.id = userid;
     var cred = {
       'userid': userid,
       'time': time,
       'school': school,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
-      'email' : email,
-      'file' : file
+      'email' : email
     };
 
     q.unshift(cred);
 
-    callback(q);
+    io.sockets.emit('joined', q);
+
+    socket.id = userid;
+
   });
 
 });
 
-// app.listen(8080, function(){
-//   console.log("Listening on Port 8080");
-// });
+app.get('/', function(request, response){
+    console.log('- Request received:', request.method, request.url);
+    response.sendFile(path.join(__dirname + '/index.html'));
+});
+
+// Function that handles user signup.
+// Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
+// Inserts the credentials to server database and notifies the user if failed.
+app.post('/userJoin', function(req, res) {
+  var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
+  conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
+    if (err) res.status(500).render("Something went wrong. Try again");
+    else res.render('index.html', {form:true});
+  });
+});
+
+app.get('*', function(request, response){
+  response.status(404).send('<h1>Error: 404</h1>');
+});
+
+// Function Declarations
+function removeUser(userid) {
+  for (i = 0; i < q.length; i++) {
+    if (q[i]['userid'] == userid) {
+      q.splice(i, 1);
+      io.sockets.emit('deleted',q);
+      return
+    }
+  }
+  console.log("Invalid removeUser request with ID: " + userid)
+}
