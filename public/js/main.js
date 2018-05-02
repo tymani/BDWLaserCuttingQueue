@@ -37,8 +37,26 @@ $(document).ready(() => {
   });
 
   // Server emits this whenever new client connects
-  socket.on('joined', function(queue) {
-    renderQ(queue);
+  socket.on("joined", function(queue) { // what is the type of the list
+    //first element in list is current user
+    //make ticking timer with total time in list
+    var timeRemaining = 0;
+
+    for(var i = 0; i < queue.length; i++) {
+      if(queue[i].userid != userId) {
+        timeRemaining += queue[i].cut_length;
+      } else {
+        break;
+      }
+
+    }
+
+    updateTimer(timeRemaining);
+
+    //print rest of list
+    //mark our current user in the list
+
+
   });
 
   socket.on('deleted', function(username, queue) {
@@ -250,29 +268,6 @@ changeTimer(60);
 //phone number
 //email
 
-socket.on("joined", function(queue) { // what is the type of the list
-  //first element in list is current user on laser1
-  //second element in list is current user on laser2
-
-  //make ticking timer with total time in list
-  var timeRemaining = 0;
-
-  for(var i = 0; i < queue.length; i++) {
-    if(queue[i].userid != userId) {
-      timeRemaining += queue[i].cut_length;
-    } else {
-      break;
-    }
-
-  }
-
-  updateTimer(timeRemaining);
-
-  //print rest of list
-  //mark our current user in the list
-
-
-});
 // updates the current time on the timer
 //timeRemaining : time remaining until user can sign up
 function updateTimer(timeRemaining) {
