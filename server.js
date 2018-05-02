@@ -18,14 +18,13 @@ app.use("/", express.static(__dirname));
 
 var conn = anyDB.createConnection('sqlite3://db/users.db');
 
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+// var server = http.createServer(app);
+// var io = require('socket.io').listen(server);
 
 var q = [];
 var ids = new Object();
 
 var hr = (new Date()).getHours();
-console.log("Time: " + hr);
 
 function sendEmail(){
 
@@ -65,8 +64,14 @@ function sendEmail(){
 
 io.sockets.on('connection', function(socket) {
 
+  // console.log("connection, 67");
+
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
+
+  socket.on("test", function(){
+    console.log("test worked, 73");
+  })
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
     //socket.broadcast.emit('joined', socket.name);
@@ -76,14 +81,15 @@ io.sockets.on('connection', function(socket) {
     var cred = {
       'username': username,
       'id' : socket.id,
-      //'time': time,
-      //'school': school,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
       'email' : email
     };
 
-    q.unshift(cred);
+    // q.unshift(cred);
+    q.push(cred);
+
+    console.log(cred.username);
 
     io.sockets.emit('joined', q);
   });

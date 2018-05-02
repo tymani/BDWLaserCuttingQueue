@@ -10,9 +10,9 @@ function onSignIn(googleUser) {
   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
   username = profile.getName();
   userEmail = profile.getEmail();
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  // console.log('Name: ' + profile.getName());
+  // console.log('Image URL: ' + profile.getImageUrl());
+  // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
   // document.getElementById('user').innerHTML = profile.getEmail();
   // document.getElementByID('user').innerHTML = profile.getEmail();
   var signInButton = document.getElementById("sign-in");
@@ -26,6 +26,8 @@ function onSignIn(googleUser) {
 $(document).ready(() => {
 
   var socket = io.connect();
+
+  // socket.emit("test");
 
   /*******************************************************************/
   /************************** Socket Functions  **********************/
@@ -72,8 +74,9 @@ $(document).ready(() => {
     //on reconnection after disconnection server need to send updated queue
 
   function sendNewQueueUser(username,length, phone_number, email) {
+    socket.emit("test");
     socket.emit("join", username, length, phone_number, email);
-  }
+  };
 
 
 
@@ -164,6 +167,10 @@ $(document).ready(() => {
 
   //Adds user to the queue
   function submitForm () {
+    console.log("170");
+    socket.emit("test");
+    socket.emit("join", " ", " ", " ", " ");
+    console.log("173");
 
     //check that necessary parts of form are filled in
     var validForm = false;
@@ -201,7 +208,9 @@ $(document).ready(() => {
       }
 
       //send info to server
-      sendNewQueueUser(username, selectedTime, null, userEmail);
+      socket.emit("test");
+      socket.emit("join", " ", " ", " ", " ");
+      // sendNewQueueUser(username, selectedTime, null, userEmail);
 
     }
 
