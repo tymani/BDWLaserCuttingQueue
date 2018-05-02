@@ -1,24 +1,9 @@
 $(document).ready(() => {
+  var socket = io.connect();
 
-  var activeTimer = "Brown";
-  //change timer
-  //brown timer starts active
-  $("#timer-brown-button").click(function(event) {
-    event.preventDefault();
-    $("#timer-other-form").addClass("non-active-timer");
-    $("#timer-brown-form").removeClass("non-active-timer");
-    activeTimer = "Brown";
-  });
+  /******************** HTML/Webpage Interactions  ********************/
 
-  $("#timer-other-button").click(function(event) {
-    event.preventDefault();
-    $("#timer-brown-form").addClass("non-active-timer");
-    $("#timer-other-form").removeClass("non-active-timer");
-    activeTimer = "Other";
-  });
-
-
-  //header motion
+  /* Header Scroll Motion Interaction */
   var headerHeight = $("header").height();
   $(document).on("scroll",function() {
     if ($(document).scrollTop() > headerHeight) {
@@ -28,8 +13,102 @@ $(document).ready(() => {
     }
   });
 
-  // Socket connects and logic
-  var socket = io.connect();
+  /* ---------------------------------------------------*/
+
+  /* Join Queue Form Appear Interaction */
+  $("#join-queue-button").click(function() {
+    $(".home-content").removeClass("stack-behind");
+     $(".form-page").removeClass("hidden");
+  });
+
+
+
+  /* Join Queue Form Disappear */
+  //When outside the form is clicked
+  $(".form-background").click(function() {
+     formDisappear();
+  });
+  //When the "X" button is clicked
+  $("#form-exit-button").click(function() {
+    formDisappear();
+  });
+
+
+/* ---------------------------------------------------*/
+
+  /* Hidden Messages Hover Interactions */
+  // Monitor Sign in Message Hover
+  $("#bdw-logo").hover(function () {
+    $("#bdw-logo-hidden-message").removeClass("hidden");
+    $(document).bind('mousemove', function(e){
+      $('#bdw-logo-hidden-message').css({
+         left:  e.pageX - 40,
+         top:   e.pageY - 30
+      });
+    });
+  }, function () {
+    $(document).unbind();
+    $("#bdw-logo-hidden-message").addClass("hidden");
+  });
+
+  //Timer Message Hover
+  $(".time-background-block").hover(function () {
+    var hiddenMessage = $("#timer-brown-hidden-message");
+    hiddenMessage.removeClass("hidden");
+    $(document).bind('mousemove', function(e){
+      hiddenMessage.css({
+         left:  e.pageX - 170,
+         top:   e.pageY - 40
+      });
+    });
+
+  }, function () {
+    $(document).unbind();
+    var hiddenMessage = $("#timer-brown-hidden-message");
+    hiddenMessage.addClass("hidden");
+  });
+
+
+  /* --------------------------------------------------- */
+
+  /* Join Queue Form Submission */
+  $("#form-submit-button").click(submitForm);
+
+  function submitForm () {
+    //check that necessary parts of form are filled in
+    var validForm = false;
+    var selectedTime = $("select option:selected").val();
+    var selectTimeDefault = "Select Approx Time";
+
+    if (selectedTime != selectTimeDefault) {
+      //a checkbox is marked
+      //check that email is valid
+      //check that dropdown is chosen
+      //THIS FUNCTION SHOULD CALL TIMING FUNCTIONS TO DECIDE WHICH LASERCUTTER TO GO TO
+      if(brownCheckbox) {
+        //add to queue
+        addToQueue(nameInput, "Lasercutter 2", selectedTime, true);
+      } else {
+        //add to queue
+        addToQueue(nameInput, "Lasercutter 2", selectedTime, false);
+      }
+
+      validForm = true;
+
+    }
+
+    if(!validForm) {
+      //show necessary false stuff
+      alert("Please fill out all of form");
+    }
+    //run notification functions
+
+    //close form
+    formDisappear();
+
+
+  }
+
 
   // Server emits this on connection to give initial state of the queue
   socket.on('handshake', function(queue) {
@@ -49,128 +128,17 @@ $(document).ready(() => {
   });
 
 
-  //form appear
-  $("#join-queue-button").click(function() {
-    $(".home-content").removeClass("stack-behind");
-     $(".form-page").removeClass("hidden");
-  })
-
-  //form disappear
-
-  $(".form-background").click(function() {
-     formDisappear();
-  });
-
-  $("#form-exit-button").click(function() {
-    formDisappear();
-  });
-
-  //hidden messages
-
-  $("#bdw-logo").hover(function () {
-    $("#bdw-logo-hidden-message").removeClass("hidden");
-    $(document).bind('mousemove', function(e){
-      $('#bdw-logo-hidden-message').css({
-         left:  e.pageX - 40,
-         top:   e.pageY - 30
-      });
-    });
-  }, function () {
-    $(document).unbind();
-    $("#bdw-logo-hidden-message").addClass("hidden");
-  });
 
 
-  $(".time-background-block").hover(function () {
-    //find which timer is active
-    var hiddenMessage = null;
-    if(activeTimer === "Brown") {
-      hiddenMessage = $("#timer-brown-hidden-message");
-      hiddenMessage.removeClass("hidden");
-      $(document).bind('mousemove', function(e){
-        hiddenMessage.css({
-           left:  e.pageX - 170,
-           top:   e.pageY - 40
-        });
-      });
-    } else {
-      hiddenMessage = $("#timer-other-hidden-message");
-      hiddenMessage.removeClass("hidden");
-      $(document).bind('mousemove', function(e){
-        hiddenMessage.css({
-           left:  e.pageX - 220,
-           top:   e.pageY - 40
-        });
-      });
-    }
-
-  }, function () {
-    $(document).unbind();
-
-    var hiddenMessage = null;
-    if(activeTimer === "Brown") {
-      hiddenMessage = $("#timer-brown-hidden-message");
-    } else {
-      hiddenMessage = $("#timer-other-hidden-message");
-    }
-
-    hiddenMessage.addClass("hidden");
-  });
-
-//checkbox logic on form
-$("label#brown-school-checkbox").click(function (){
-  if($("#brown-school-checkbox input")[0].checked) {
-    $("#other-checkbox input")[0].checked = false;
-  }
-
-});
-$("label#other-checkbox").click(function (){
-  if($("#other-checkbox input")[0].checked) {
-    $("#brown-school-checkbox input")[0].checked = false;
-  }
-});
-
-//form submission
-$("#form-submit-button").click(submitForm);
-
-function submitForm () {
-  //check that necessary parts of form are filled in
-  var validForm = false;
-  var brownCheckbox = $("#brown-school-checkbox input")[0].checked;
-  var otherCheckbox = $("#other-checkbox input")[0].checked;
-  var emailInput = $("#form-email-form input").val();
-  var selectedTime = $("select option:selected").val();
-  var selectTimeDefault = "Select Approx Time";
-  var nameInput = $("#form-name-form input").val();
-
-  if ((brownCheckbox || otherCheckbox) && validateEmail(emailInput) && selectedTime != selectTimeDefault && nameInput != "") {
-    //a checkbox is marked
-    //check that email is valid
-    //check that dropdown is chosen
-    //THIS FUNCTION SHOULD CALL TIMING FUNCTIONS TO DECIDE WHICH LASERCUTTER TO GO TO
-    if(brownCheckbox) {
-      //add to queue
-      addToQueue(nameInput, "Lasercutter 2", selectedTime, true);
-    } else {
-      //add to queue
-      addToQueue(nameInput, "Lasercutter 2", selectedTime, false);
-    }
-
-    validForm = true;
-
-  }
-
-  if(!validForm) {
-    //show necessary false stuff
-    alert("Please fill out all of form");
-  }
-  //run notification functions
-
-  //close form
-  formDisappear();
 
 
-}
+
+
+
+
+
+
+
 
 //TODO This is a function that will take care of rendering the new state of the queue
 function renderQ(queue) {
@@ -178,18 +146,14 @@ function renderQ(queue) {
 
 }
 
-function addToQueue(name,lasercutter,cutLength,isBrown) {
+function addToQueue(name,lasercutter,cutLength) {
   var newQueueElem = "<tr class='queue-elem-container selected'>"+
                         "<td class='queue-elem'>"+name+"</td>"+
-                        "<td class='queue-elem'>"+lasercutter+"</td>"+
                         "<td class='queue-elem'>"+cutLength+"</td>"+
                     "</tr>"
 
-  if(isBrown) {
-    $(".queue-table tbody.brown-queue-elems-container").append(newQueueElem);
-  } else {
-    $(".queue-table tbody.other-queue-elems-container").append(newQueueElem);
-  }
+
+    $(".queue-table").append(newQueueElem);
 }
 
 function validateEmail(email) {
@@ -232,7 +196,7 @@ $("#phone-notification-checkbox input").click(function () {
 
 
 
-var socket = io.connect();
+
 
 var userId = -1;
 
