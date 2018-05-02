@@ -21,7 +21,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var q = [];
-
+var ids = new Object();
 
 
 // nodemailer.createTestAccount((err, account) => {
@@ -57,15 +57,19 @@ var q = [];
 // });
 
 io.sockets.on('connection', function(socket) {
-  socket.on('join', function(userid, time, school, length, pnum, email, file, callback) {// I think that the server should make the userids
-    // I also think that we don't need file, or School
-    //also just clarifying is time the time the user joined the queue?
-    socket.broadcast.emit('joined', socket.name);
+
+  socket.emit('handshake', q); // Sends the newly connected client current state of the queue
+
+  socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
+    //socket.broadcast.emit('joined', socket.name);
+
+    socket.id = generateID();
 
     var cred = {
-      'userid': userid,
-      'time': time,
-      'school': school,
+      'username': username,
+      'id' : socket.id,
+      //'time': time,
+      //'school': school,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
       'email' : email
@@ -74,9 +78,6 @@ io.sockets.on('connection', function(socket) {
     q.unshift(cred);
 
     io.sockets.emit('joined', q);
-
-    socket.id = userid;
-
   });
 
 });
@@ -104,11 +105,27 @@ app.get('*', function(request, response){
 // Function Declarations
 function removeUser(userid) {
   for (i = 0; i < q.length; i++) {
-    if (q[i]['userid'] == userid) {
+    var entry = q[i];
+    if (entry['userid'] == userid) {
       q.splice(i, 1);
-      io.sockets.emit('deleted',q);
+      delete ids[userid];
+      io.sockets.emit('deleted', entry['username'], q);
       return
     }
   }
   console.log("Invalid removeUser request with ID: " + userid)
+}
+
+function generateID() {
+  var id = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 10; i++)
+    id += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  if (ids.hasOwnProperty(id)) {
+    return generateID();
+  }
+  ids[id] = true;
+  return id;
 }
