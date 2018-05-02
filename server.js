@@ -23,38 +23,45 @@ var io = require('socket.io').listen(server);
 var q = [];
 var ids = new Object();
 
+var hr = (new Date()).getHours();
+console.log("Time: " + hr);
 
-// nodemailer.createTestAccount((err, account) => {
-//     // create reusable transporter object using the default SMTP transport
-//     let transporter = nodemailer.createTransport({
-//       service: 'gmail',
-//       auth: {
-//         user: 'bdwautomation@gmail.com',
-//         pass: 'xxxx'
-//       }
-//     });
-//
-//     // setup email data with unicode symbols
-//     let mailOptions = {
-//         from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
-//         to: 'nicholas_faulkner@brown.edu', // list of receivers
-//         subject: 'Hello ✔', // Subject line
-//         text: 'Hello world?', // plain text body
-//         html: '<b>Hello world?</b>' // html body
-//     };
-//
-//     // send mail with defined transport object
-//     transporter.sendMail(mailOptions, (error, info) => {
-//         if (error) {
-//             return console.log(error);
-//         }
-//
-//         else{
-//           console.log("Message Sent");
-//         }
-//
-//     });
-// });
+
+function sendEmail(){
+
+  nodemailer.createTestAccount((err, account) => {
+      // create reusable transporter object using the default SMTP transport
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'bdwautomation@gmail.com',
+          pass: 'xxx'
+        }
+      });
+
+      // setup email data with unicode symbols
+      let mailOptions = {
+          from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
+          to: 'nicholas_faulkner@brown.edu', // list of receivers
+          subject: 'You\'re Next in Line for the Laser Cutter!', // Subject line
+          text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop.', // plain text body
+          // html: '<img src="__dirname + public/img/bdw-logo.png">' // html body
+      };
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+
+          else{
+            console.log("Message Sent");
+          }
+
+      });
+  });
+
+};
 
 io.sockets.on('connection', function(socket) {
 
