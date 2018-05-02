@@ -1,7 +1,7 @@
+//global variables
+
 var username;
 var userEmail;
-
-
 
 
 function onSignIn(googleUser) {
@@ -22,27 +22,57 @@ function onSignIn(googleUser) {
   joinQueueButton.classList.remove("hidden");
 }
 
-function signOut() {
-  var auth2 = gapi.auth2.getAuthInstance();
-  auth2.signOut().then(function () {
-  console.log('User signed out.');
-  });
-  // document.getElementById('user').innerHTML = " ";
-  var signInButton = document.getElementById("sign-in");
-  signInButton.classList.remove("hidden");
-  var signOutButton = document.getElementById("sign-out");
-  signOutButton.classList.add("hidden");
-  var joinQueueButton = document.getElementById("join-queue-form");
-  joinQueueButton.classList.add("hidden");
-}
-
-
-
-
 $(document).ready(() => {
+
   var socket = io.connect();
 
-  /******************** HTML/Webpage Interactions  ********************/
+  /*******************************************************************/
+  /************************** Socket Functions  **********************/
+  /*******************************************************************/
+
+    // Server emits this on connection to give initial state of the queue
+    socket.on('handshake', function(queue) {
+      renderQ(queue);
+    });
+
+    // Server emits this whenever new client connects
+
+    socket.on("joined", function(queue) {
+      //first element in list is current user on laser1
+      //second element in list is current user on laser2
+
+      //make ticking timer with total time in list
+      var timeRemaining = 0;
+
+      for(var i = 0; i < queue.length; i++) {
+        if(queue[i].userid != userId) {
+          timeRemaining += queue[i].cut_length;
+        } else {
+          break;
+        }
+
+      }
+
+      updateTimer(timeRemaining);
+
+      //print rest of list
+      //mark our current user in the list
+
+
+    });
+
+    socket.on('deleted', function(username, queue) {
+      renderQ(queue);
+      if (username == getMeta('username')) {
+          //TODO This client has been removed from queue.
+      }
+    });
+
+
+
+  /*******************************************************************/
+  /******************** HTML/Webpage Interactions  *******************/
+  /*******************************************************************/
 
   /* Header Scroll Motion Interaction */
   var headerHeight = $("header").height();
@@ -78,6 +108,7 @@ $(document).ready(() => {
 /* ---------------------------------------------------*/
 
   /* Hidden Messages Hover Interactions */
+
   // Monitor Sign in Message Hover
   $("#bdw-logo").hover(function () {
     $("#bdw-logo-hidden-message").removeClass("hidden");
@@ -113,132 +144,161 @@ $(document).ready(() => {
   /* --------------------------------------------------- */
 
   /* Join Queue Form Submission */
+
+
+  //bind submitForm function to join queue form click
   $("#form-submit-button").click(submitForm);
 
+  //Adds user to the queue
   function submitForm () {
+
     //check that necessary parts of form are filled in
     var validForm = false;
+
     var selectedTime = $("select option:selected").val();
     var selectTimeDefault = "Select Approx Time";
 
-    if (selectedTime != selectTimeDefault) {
-      //a checkbox is marked
-      //check that email is valid
-      //check that dropdown is chosen
-      //THIS FUNCTION SHOULD CALL TIMING FUNCTIONS TO DECIDE WHICH LASERCUTTER TO GO TO
-        //add to queue
-        addToQueue(username, selectedTime);
+    if (selectedTime !== selectTimeDefault) {
+        //form is valid
+        validForm = true;
 
-
-      validForm = true;
+        //add our user to the queue
+        addToQueue(username, selectedTime,"user");
 
     }
 
     if(!validForm) {
       //show necessary false stuff
-      alert("Please fill out all of form");
+      console.log("Please select approx time of cut.");
+    } else{
+
+      //run notification functions
+
+      //close form
+      formDisappear();
+
+      //delete join queue button
+      while ($(".header-buttons-container")[0].hasChildNodes()) {
+        $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
+      }
+
+      //delete form
+      while ($(".form-page")[0].hasChildNodes()) {
+        $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
+      }
     }
-    //run notification functions
-
-    //close form
-    formDisappear();
-
-    //delete join queue button
-    while ($(".header-buttons-container")[0].hasChildNodes()) {
-      $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
-    }
-
-    //delete form
-    while ($(".form-page")[0].hasChildNodes()) {
-      $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
-    }
-
-
-
 
   }
 
+  /* --------------------------------------------------- */
 
-  // Server emits this on connection to give initial state of the queue
-  socket.on('handshake', function(queue) {
-    renderQ(queue);
+  /* Sign Out Interaction */
+
+  $("#sign-out").click(function() {
+    signOut();
   });
 
-  // Server emits this whenever new client connects
-  socket.on('joined', function(queue) {
-    renderQ(queue);
-  });
 
-  socket.on('deleted', function(username, queue) {
-    renderQ(queue);
-    if (username == getMeta('username')) {
-        //TODO This client has been removed from queue.
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+    console.log('User signed out.');
+    });
+    // document.getElementById('user').innerHTML = " ";
+    var signInButton = document.getElementById("sign-in");
+    signInButton.classList.remove("hidden");
+    var signOutButton = document.getElementById("sign-out");
+    signOutButton.classList.add("hidden");
+    var joinQueueButton = document.getElementById("join-queue-form");
+    joinQueueButton.classList.add("hidden");
+  }
+
+  /* --------------------------------------------------- */
+
+  /* Phone Checkbox Form Interaction */
+  //phone number checkbox clicked
+  $("#phone-notification-checkbox input").click(function () {
+    //make phone number appear if checked
+    //make disappear if unchecked
+    if($("#phone-notification-checkbox input")[0].checked) {
+      $(".phone-number-module").removeClass("hidden");
+      $(".form-content-box").css("height", "400px");
+    } else {
+      $(".phone-number-module").addClass("hidden");
+      $(".form-content-box").css("height", "320px");
     }
   });
 
+  /* --------------------------------------------------- */
 
+  /* Webpage Interaction Util Functions */
 
+  //TODO This is a function that will take care of rendering the new state of the queue
+  function renderQ(queue) {
+    var thisname = getMeta('username');
 
+  }
 
+  function addToQueue(name,cutLength, flag) {
+    var newQueueElem;
+    if(flag === "user") {
+      newQueueElem = "<tr class='queue-elem-container selected'>"+
+                            "<td class='queue-elem'>"+name+"</td>"+
+                            "<td class='queue-elem'>"+cutLength+"</td>"+
+                        "</tr>";
 
-$("#sign-out").click(function() {
-  signOut();
-});
-
-
-
-
-
-
-
-//TODO This is a function that will take care of rendering the new state of the queue
-function renderQ(queue) {
-  var thisname = getMeta('username');
-
-}
-
-function addToQueue(name,cutLength) {
-  var newQueueElem = "<tr class='queue-elem-container selected'>"+
-                        "<td class='queue-elem'>"+name+"</td>"+
-                        "<td class='queue-elem'>"+cutLength+"</td>"+
-                    "</tr>"
-
+    } else if (flag === "non-user") {
+      newQueueElem = "<tr class='queue-elem-container'>"+
+                            "<td class='queue-elem'>"+name+"</td>"+
+                            "<td class='queue-elem'>"+cutLength+"</td>"+
+                        "</tr>";
+    }else if(flag == "currently-using") {
+      //tbd
+    }
 
     $(".queue-table").append(newQueueElem);
-}
-
-function validateEmail(email) {
-  //placeholder Function
-  return (email != "")
-
-
-}
-
-function getMeta(name) {
-  var tag = document.querySelector('meta[name=' + name + ']');
-  if (tag != null)
-    return tag.content;
-  return '';
-}
-
-function formDisappear() {
-  $(".home-content").addClass("stack-behind");
-  $(".form-page").addClass("hidden");
-}
-
-
-//phone number checkbox clicked
-$("#phone-notification-checkbox input").click(function () {
-  //make phone number appear if checked
-  //make disappear if unchecked
-  if($("#phone-notification-checkbox input")[0].checked) {
-    $(".phone-number-module").removeClass("hidden");
-    $(".form-content-box").css("height", "400px");
-  } else {
-    $(".phone-number-module").addClass("hidden");
-    $(".form-content-box").css("height", "320px");
   }
-});
+
+  function validateEmail(email) {
+    //placeholder Function
+    return (email != "")
+
+
+  }
+
+  function getMeta(name) {
+    var tag = document.querySelector('meta[name=' + name + ']');
+    if (tag != null)
+      return tag.content;
+    return '';
+  }
+
+  function formDisappear() {
+    $(".home-content").addClass("stack-behind");
+    $(".form-page").addClass("hidden");
+  }
+
+/* --------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*******************************************/
@@ -252,12 +312,11 @@ $("#phone-notification-checkbox input").click(function () {
 var userId = -1;
 
 var ticking = null;
-
 var currHour = 0;
 var currMin = 0;
 
 
-changeTimer(60);
+changeTimer(100);
 //each queue element has the following attributes
 // userid
 //time
@@ -265,29 +324,6 @@ changeTimer(60);
 //phone number
 //email
 
-socket.on("joined", function(queue) { // what is the type of the list
-  //first element in list is current user on laser1
-  //second element in list is current user on laser2
-
-  //make ticking timer with total time in list
-  var timeRemaining = 0;
-
-  for(var i = 0; i < queue.length; i++) {
-    if(queue[i].userid != userId) {
-      timeRemaining += queue[i].cut_length;
-    } else {
-      break;
-    }
-
-  }
-
-  updateTimer(timeRemaining);
-
-  //print rest of list
-  //mark our current user in the list
-
-
-});
 // updates the current time on the timer
 //timeRemaining : time remaining until user can sign up
 function updateTimer(timeRemaining) {
@@ -356,10 +392,10 @@ function printTimer(hours, minutes) {
 
     if (minutes > 0) {
       var printMinutes = "<div class='timer-time-hours'>" + minutes + minuteUnits + "</div>";
-      timer.append(printMinutes);
     }
 
     timer.append(printHours);
+    timer.append(printMinutes);
 
   } else {
 

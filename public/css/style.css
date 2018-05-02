@@ -260,7 +260,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
+    background-color: #1c75bc;
     color: white;
     position: relative;
     padding-left: 50px;
@@ -291,7 +291,7 @@ header {
     left: 0;
     height: 40px;
     width: 40px;
-    background-color: black;
+    background-color: #1c75bc;
     outline: .5px solid white;
     border-radius: 5px;
 }
@@ -299,14 +299,14 @@ header {
 
 /* On mouse-over, add a grey background color */
 .form-checkbox-label:hover input ~ .checkmark {
-    background-color: black;
+    background-color:  #1c75bc;
 
 }
 
 
 /* When the checkbox is checked, add a blue background */
 .form-checkbox-label input:checked ~ .checkmark {
-    background-color: black;
+    background-color:  #1c75bc;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -441,7 +441,7 @@ display: none;
   font-size: 16px;
   line-height: 1.75;
   color: #f2f2f2;
-  background-color: black;
+  background-color:  #1c75bc;
   background-image: none;
   border: 1px solid white;
   -ms-word-break: normal;
