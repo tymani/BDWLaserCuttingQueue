@@ -69,6 +69,11 @@ $(document).ready(() => {
       }
     });
 
+  function sendNewQueueUser(username,length, phone_number, email) {
+    socket.emit("join", username, length, phone_number, email);
+  }
+
+
 
 
   /*******************************************************************/
@@ -187,6 +192,10 @@ $(document).ready(() => {
       while ($(".form-page")[0].hasChildNodes()) {
         $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
       }
+
+      //send info to server
+      sendNewQueueUser(username, selectedTime, null, userEmail);
+
     }
 
   }
