@@ -249,9 +249,8 @@ changeTimer(60);
 //length
 //phone number
 //email
-var masterQueueList = new Array()
 
-socket.on("queue", function(queue){ // what is the type of the list
+socket.on("queue", function(queue) { // what is the type of the list
   //first element in list is current user
   //make ticking timer with total time in list
   var timeRemaining = 0;
@@ -380,17 +379,10 @@ function printEmptyQueuePage() {
   console.log("TBD");
 }
 
-function onSignIn(googleUser) {
-  console.log("hello");
-  var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}
 
 //make timeremaingin function
 //make lasercutter assignment fucntion
 //every client is updated with who currently at the
+
 
 });
