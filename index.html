@@ -34,6 +34,7 @@
 						<form class="join-queue-form" id="join-queue-form">
 							<input class="join-queue-button" id="join-queue-button" value="Join Queue" type="button">
 						</form>
+						<div id="user"> </div>
 						<!-- <div class="triangle"></div>
 						<div id="join-queue-test"></div> -->
 					</div>
@@ -240,6 +241,8 @@
 		  console.log('Name: ' + profile.getName());
 		  console.log('Image URL: ' + profile.getImageUrl());
 		  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+			document.getElementById('user').innerHTML = profile.getEmail();
+			// document.getElementByID('user').innerHTML = profile.getEmail();
 		}
 
 			function signOut() {
