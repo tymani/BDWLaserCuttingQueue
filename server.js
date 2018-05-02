@@ -5,6 +5,7 @@ var server = http.createServer(app);
 var path = require('path');
 var http = require('http');
 var anyDB = require('any-db');
+var env = require('dotenv/config');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
 
@@ -26,7 +27,6 @@ var ids = new Object();
 var hr = (new Date()).getHours();
 console.log("Time: " + hr);
 
-
 function sendEmail(){
 
   nodemailer.createTestAccount((err, account) => {
@@ -35,7 +35,7 @@ function sendEmail(){
         service: 'gmail',
         auth: {
           user: 'bdwautomation@gmail.com',
-          pass: 'xxx'
+          pass: process.env.EMAIL_PASSWORD
         }
       });
 

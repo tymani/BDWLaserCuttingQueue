@@ -22,6 +22,7 @@
     "any-db-sqlite3": "^2.1.4",
     "body-parser": "^1.18.2",
     "consolidate": "^0.15.1",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "gapi": "0.0.3",
     "googleapis": "^27.0.0",
