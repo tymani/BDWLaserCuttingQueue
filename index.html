@@ -8,7 +8,9 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="public/js/main.js"></script>
 		<link href="public/img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<title> BDW Lasercuttering Queue </title>
+		<meta name="google-signin-client_id" content="710331240051-v1ntjh3jb8muk36e3lsr98fooojbllob.apps.googleusercontent.com">
 	</head>
 	<body>
 		<div id="timer-brown-hidden-message" class="hidden-message hidden">Time until next lasercutter is open for Brown U community</div>
@@ -26,6 +28,7 @@
 				<div class="join-queue-container">
 
 					<img id="bdw-logo" src="public/img/bdw-logo.png">
+					<div class="g-signin2" data-onsuccess="onSignIn"></div>
 					<div class="join-queue-form-container">
 						<form class="join-queue-form" id="join-queue-form">
 							<input class="join-queue-button" id="join-queue-button" value="Join Queue" type="button">
