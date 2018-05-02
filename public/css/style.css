@@ -40,6 +40,7 @@ body {
 .header-scroll {
   position: fixed;
   width: 100vw;
+  z-index: 60;
 }
 
 .join-queue-form {

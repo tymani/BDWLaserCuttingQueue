@@ -17,7 +17,7 @@ function onSignIn(googleUser) {
   // document.getElementByID('user').innerHTML = profile.getEmail();
   var signInButton = document.getElementById("sign-in");
   signInButton.classList.add("hidden");
-  var signOutButton = document.getElementById("sign-out");
+  var signOutButton = document.getElementsByClassName("sign-out-container")[0];
   signOutButton.classList.remove("hidden");
   var joinQueueButton = document.getElementById("join-queue-form");
   joinQueueButton.classList.remove("hidden");
@@ -69,6 +69,8 @@ $(document).ready(() => {
       }
     });
 
+    //on reconnection after disconnection server need to send updated queue
+
   function sendNewQueueUser(username,length, phone_number, email) {
     socket.emit("join", username, length, phone_number, email);
   }
@@ -95,7 +97,12 @@ $(document).ready(() => {
   /* Join Queue Form Appear Interaction */
   $("#join-queue-button").click(function() {
     $(".home-content").removeClass("stack-behind");
-     $(".form-page").removeClass("hidden");
+     $("#join-queue-form-page").removeClass("hidden");
+  });
+
+  $("#monitor-button-form").click(function(){
+    $(".home-content").removeClass("stack-behind");
+     $("#monitor-password-form-page").removeClass("hidden");
   });
 
 
@@ -217,7 +224,7 @@ $(document).ready(() => {
     // document.getElementById('user').innerHTML = " ";
     var signInButton = document.getElementById("sign-in");
     signInButton.classList.remove("hidden");
-    var signOutButton = document.getElementById("sign-out");
+    var signOutButton = document.getElementsByClassName("sign-out-container")[0];
     signOutButton.classList.add("hidden");
     var joinQueueButton = document.getElementById("join-queue-form");
     joinQueueButton.classList.add("hidden");
@@ -296,7 +303,8 @@ $(document).ready(() => {
 
   function formDisappear() {
     $(".home-content").addClass("stack-behind");
-    $(".form-page").addClass("hidden");
+    $("#join-queue-form-page").addClass("hidden");
+    $("#monitor-password-form-page").addClass("hidden");
   }
 
 /* --------------------------------------------------- */

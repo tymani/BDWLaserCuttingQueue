@@ -26,14 +26,16 @@
 				</div>
 				<div class="header-buttons-container">
 					<!-- <div id="user"> </div> -->
-					<div><img id="bdw-logo" src="public/img/bdw-logo.png"></div>
+					<div id="monitor-button-form">
+						<img id="bdw-logo" src="public/img/bdw-logo.png">
+					</div>
 					<div id="sign-in" class="g-signin2" data-onsuccess="onSignIn"></div>
-					<div class="sign-out-container">
-						<form id="sign-out" class="hidden">
+					<div class="sign-out-container hidden">
+						<form id="sign-out">
 							<input class="bdw-button" id="sign-out-button" value="Sign Out" type="button">
 						</form>
 					</div>
-					<div class="join-queue-form-container">
+					<div class="join-queue-form-container hidden">
 						<form class="hidden join-queue-form" id="join-queue-form">
 							<input class="bdw-button" id="join-queue-button" value="Join Queue" type="button">
 						</form>
@@ -117,7 +119,7 @@
 							<!-- <td class="queue-elem">Lasercutter 1</td> -->
 							<td class="queue-elem">30 mins</td>
 						</tr>
-						<tr class="queue-elem-container">
+						<tr class="queue-elem-container selected">
 							<td class="queue-elem">Jane Doe</td>
 							<!-- <td class="queue-elem">Lasercutter 1</td> -->
 							<td class="queue-elem">30 mins</td>
@@ -141,7 +143,7 @@
 			</footer>
 	</div>
   <!-- {{#form}} -->
-	<div class="form-page hidden" >
+	<div id="join-queue-form-page"class="form-page hidden" >
 		<div class="form-background"></div>
 		<div class="form-content-box">
 			<div class="form-header">
@@ -230,6 +232,11 @@
 		</div>
 </div>
 	<!-- {{/form}} -->
+	<!-- Monitor Password Form [START] -->
+	<div id="monitor-password-form-page"class="form-page hidden" >
+		<div class="form-background"></div>
+	</div>
+	<!-- Monitor Password Form [END] -->
 	</body>
 
 </html>
