@@ -25,11 +25,17 @@ body {
   margin-right: auto;
 }
 
-.join-queue-container {
+.header-buttons-container {
   display: flex;
   align-items: center;
   margin-left: auto;
+  margin-right: 20px;
 }
+
+.header-buttons-container > div {
+  margin: 15px;
+}
+
 
 .header-scroll {
   position: fixed;
@@ -37,25 +43,29 @@ body {
 }
 
 .join-queue-form {
-  margin: 20px;
-  margin-right: 50px;
+  /* margin: 20px; */
 }
 
-.join-queue-form input {
+#form-submit-button {
+  margin: 20px;
+}
+
+.bdw-button {
   display: block;
   cursor: pointer;
-  border: 1px solid black;
+  border: 2px solid #1c75bc;
   padding: 10px;
   padding-left: 30px;
   padding-right: 30px;
-  background-color: black;
-  color: white;
+  /* background-color: black; */
+  color: #1c75bc;
   font-family: 'Roboto-Regular';
   font-size: 16px;
 }
 .logo-text {
   font-family: 'Avenir-Black';
   font-size: 20px;
+  /* color: #1c75bc; */
 }
 
 .logo-text-container {
@@ -96,7 +106,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: #1c75bc;
   padding-top: 10px;
   padding-bottom: 10px;
   width: 360px;
@@ -178,6 +188,8 @@ header {
 
 .queue-elem-container {
   font-family: "Roboto-Regular";
+  /* color: #1c75bc; */
+  /* border: 1px solid #1c75bc; */
   border: 1px solid black;
   text-align: center;
   height: 50px;

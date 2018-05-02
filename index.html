@@ -13,8 +13,7 @@
 		<meta name="google-signin-client_id" content="710331240051-v1ntjh3jb8muk36e3lsr98fooojbllob.apps.googleusercontent.com">
 	</head>
 	<body>
-		<div id="timer-brown-hidden-message" class="hidden-message hidden">Time until next lasercutter is open for Brown U community</div>
-		<div id="timer-other-hidden-message" class="hidden-message hidden">Time until next lasercutter is open for members outside Brown U community</div>
+		<div id="timer-brown-hidden-message" class="hidden-message hidden">Time until next lasercutter is open</div>
 		<div id="bdw-logo-hidden-message" class="hidden-message hidden">Monitor sign in</div>
 		<div class="home-content stack-behind">
 			<header>
@@ -25,16 +24,19 @@
 						<div class="logo-text">Workshop</div>
 					</div>
 				</div>
-				<div class="join-queue-container">
-
-					<img id="bdw-logo" src="public/img/bdw-logo.png">
+				<div class="header-buttons-container">
+					<!-- <div id="user"> </div> -->
+					<div><img id="bdw-logo" src="public/img/bdw-logo.png"></div>
 					<div id="sign-in" class="g-signin2" data-onsuccess="onSignIn"></div>
-					<a id="sign-out" class="hidden" href="#" onclick="signOut();">Sign out</a>
+					<div class="sign-out-container">
+						<form id="sign-out" class="hidden">
+							<input class="bdw-button" id="sign-out-button" value="Sign Out" type="button">
+						</form>
+					</div>
 					<div class="join-queue-form-container">
 						<form class="hidden join-queue-form" id="join-queue-form">
-							<input class="join-queue-button" id="join-queue-button" value="Join Queue" type="button">
+							<input class="bdw-button" id="join-queue-button" value="Join Queue" type="button">
 						</form>
-						<div id="user"> </div>
 						<!-- <div class="triangle"></div>
 						<div id="join-queue-test"></div> -->
 					</div>
@@ -221,7 +223,7 @@
 			<div class="form-footer">
 				<div class="form-submit-container">
 					<form class="join-queue-form" id="form-submit-form">
-							<input class="join-queue-button" id="form-submit-button" value="Join Queue" type="button">
+							<input class="bdw-button" id="form-submit-button" value="Join Queue" type="button">
 					</form>
 				</div>
 			</div>
@@ -229,37 +231,5 @@
 </div>
 	<!-- {{/form}} -->
 	</body>
-
-	<script>
-		function onSignIn(googleUser) {
-		  var profile = googleUser.getBasicProfile();
-		  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-		  console.log('Name: ' + profile.getName());
-		  console.log('Image URL: ' + profile.getImageUrl());
-		  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-			document.getElementById('user').innerHTML = profile.getEmail();
-			// document.getElementByID('user').innerHTML = profile.getEmail();
-			var signInButton = document.getElementById("sign-in");
-			signInButton.classList.add("hidden");
-			var signOutButton = document.getElementById("sign-out");
-			signOutButton.classList.remove("hidden");
-			var joinQueueButton = document.getElementById("join-queue-form");
-			joinQueueButton.classList.remove("hidden");
-		}
-
-			function signOut() {
-	    var auth2 = gapi.auth2.getAuthInstance();
-	    auth2.signOut().then(function () {
-	      console.log('User signed out.');
-	    });
-			document.getElementById('user').innerHTML = " ";
-			var signInButton = document.getElementById("sign-in");
-			signInButton.classList.remove("hidden");
-			var signOutButton = document.getElementById("sign-out");
-			signOutButton.classList.add("hidden");
-			var joinQueueButton = document.getElementById("join-queue-form");
-			joinQueueButton.classList.add("hidden");
-	  }
-	</script>
 
 </html>

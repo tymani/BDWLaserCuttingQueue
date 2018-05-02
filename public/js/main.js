@@ -1,3 +1,44 @@
+var username;
+var userEmail;
+
+
+
+
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  username = profile.getName();
+  userEmail = profile.getEmail();
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  // document.getElementById('user').innerHTML = profile.getEmail();
+  // document.getElementByID('user').innerHTML = profile.getEmail();
+  var signInButton = document.getElementById("sign-in");
+  signInButton.classList.add("hidden");
+  var signOutButton = document.getElementById("sign-out");
+  signOutButton.classList.remove("hidden");
+  var joinQueueButton = document.getElementById("join-queue-form");
+  joinQueueButton.classList.remove("hidden");
+}
+
+function signOut() {
+  var auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+  console.log('User signed out.');
+  });
+  // document.getElementById('user').innerHTML = " ";
+  var signInButton = document.getElementById("sign-in");
+  signInButton.classList.remove("hidden");
+  var signOutButton = document.getElementById("sign-out");
+  signOutButton.classList.add("hidden");
+  var joinQueueButton = document.getElementById("join-queue-form");
+  joinQueueButton.classList.add("hidden");
+}
+
+
+
+
 $(document).ready(() => {
   var socket = io.connect();
 
@@ -57,7 +98,7 @@ $(document).ready(() => {
     hiddenMessage.removeClass("hidden");
     $(document).bind('mousemove', function(e){
       hiddenMessage.css({
-         left:  e.pageX - 170,
+         left:  e.pageX - 100,
          top:   e.pageY - 40
       });
     });
@@ -85,13 +126,9 @@ $(document).ready(() => {
       //check that email is valid
       //check that dropdown is chosen
       //THIS FUNCTION SHOULD CALL TIMING FUNCTIONS TO DECIDE WHICH LASERCUTTER TO GO TO
-      if(brownCheckbox) {
         //add to queue
-        addToQueue(nameInput, "Lasercutter 2", selectedTime, true);
-      } else {
-        //add to queue
-        addToQueue(nameInput, "Lasercutter 2", selectedTime, false);
-      }
+        addToQueue(username, selectedTime);
+
 
       validForm = true;
 
@@ -105,6 +142,18 @@ $(document).ready(() => {
 
     //close form
     formDisappear();
+
+    //delete join queue button
+    while ($(".header-buttons-container")[0].hasChildNodes()) {
+      $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
+    }
+
+    //delete form
+    while ($(".form-page")[0].hasChildNodes()) {
+      $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
+    }
+
+
 
 
   }
@@ -132,7 +181,9 @@ $(document).ready(() => {
 
 
 
-
+$("#sign-out").click(function() {
+  signOut();
+});
 
 
 
@@ -146,7 +197,7 @@ function renderQ(queue) {
 
 }
 
-function addToQueue(name,lasercutter,cutLength) {
+function addToQueue(name,cutLength) {
   var newQueueElem = "<tr class='queue-elem-container selected'>"+
                         "<td class='queue-elem'>"+name+"</td>"+
                         "<td class='queue-elem'>"+cutLength+"</td>"+
