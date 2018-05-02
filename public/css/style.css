@@ -50,7 +50,7 @@ body {
   padding-right: 30px;
   background-color: black;
   color: white;
-  font-family: 'Roboto';
+  font-family: 'Roboto-Regular';
   font-size: 16px;
 }
 .logo-text {
@@ -109,7 +109,7 @@ header {
 
 .timer-school-blocks form button {
   border: none;
-  font-family: 'Roboto';
+  font-family: 'Roboto-Regular';
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,7 +177,7 @@ header {
 
 
 .queue-elem-container {
-  font-family: "Roboto";
+  font-family: "Roboto-Regular";
   border: 1px solid black;
   text-align: center;
   height: 50px;
