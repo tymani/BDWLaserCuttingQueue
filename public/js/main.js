@@ -250,8 +250,10 @@ changeTimer(60);
 //phone number
 //email
 
-socket.on("queue", function(queue) { // what is the type of the list
-  //first element in list is current user
+socket.on("joined", function(queue) { // what is the type of the list
+  //first element in list is current user on laser1
+  //second element in list is current user on laser2
+
   //make ticking timer with total time in list
   var timeRemaining = 0;
 
