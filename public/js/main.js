@@ -1,5 +1,6 @@
 //global variables
 
+var userId = -1;
 var username;
 var userEmail;
 
@@ -237,6 +238,17 @@ $(document).ready(() => {
   function renderQ(queue) {
     var thisname = getMeta('username');
 
+    addToQueue(queue[0].username,queue[0].cut_length,"currently-using");
+    addToQueue(queue[1].username,queue[1].cut_length,"currently-using");
+
+    for(var i = 2; i < queue.length; i++) {
+      if(queue[i].userid == userid) {
+        addToQueue(queue[i].username,queue[i].cut_length,"user");
+      } else {
+        addToQueue(queue[i].username,queue[i].cut_length,"non-user");
+      }
+    }
+
   }
 
   function addToQueue(name,cutLength, flag) {
@@ -309,7 +321,7 @@ $(document).ready(() => {
 
 
 
-var userId = -1;
+
 
 var ticking = null;
 var currHour = 0;
