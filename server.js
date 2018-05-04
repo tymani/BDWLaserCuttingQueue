@@ -88,6 +88,11 @@ io.sockets.on('connection', function(socket) {
     io.sockets.emit('joined', q);
   });
 
+  socket.on('delete-user', function(username) {
+    removeUser(username);
+    socket.emit('deleted', username, q);
+  });
+
 });
 
 app.get('/', function(request, response){
@@ -111,10 +116,10 @@ app.get('*', function(request, response){
 });
 
 // Function Declarations
-function removeUser(userid) {
+function removeUser(username) {
   for (i = 0; i < q.length; i++) {
     var entry = q[i];
-    if (entry['userid'] == userid) {
+    if (entry['username'] == username) {
       q.splice(i, 1);
       delete ids[userid];
       io.sockets.emit('deleted', entry['username'], q);

@@ -41,7 +41,6 @@ $(document).ready(() => {
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
-      console.log("joined");
       //first element in list is current user on laser1
       //second element in list is current user on laser2
 
@@ -64,6 +63,7 @@ $(document).ready(() => {
 
 
     });
+
 
     socket.on('deleted', function(username, queue) {
       renderQ(queue);
@@ -108,8 +108,6 @@ $(document).ready(() => {
      $("#monitor-password-form-page").removeClass("hidden");
   });
 
-
-
   /* Join Queue Form Disappear */
   //When outside the form is clicked
   $(".form-background").click(function() {
@@ -118,6 +116,11 @@ $(document).ready(() => {
   //When the "X" button is clicked
   $("#form-exit-button").click(function() {
     formDisappear();
+  });
+
+  $('body').on('click', "#delete-queue-button",function () {
+    console.log("delete");
+    socket.emit('delete-user', username);
   });
 
 
@@ -268,7 +271,7 @@ $(document).ready(() => {
       } else {
         addToQueue(queue[0].username,queue[0].cut_length,"non-user");
         addToQueue(queue[1].username,queue[1].cut_length,"non-user");
-        
+
         for(var i = 2; i < queue.length; i++) {
           if(queue[i].userid == userid) {
             addToQueue(queue[i].username,queue[i].cut_length,"user");
