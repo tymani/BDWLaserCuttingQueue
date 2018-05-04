@@ -86,14 +86,14 @@ $(document).ready(() => {
   /*******************************************************************/
 
   /* Header Scroll Motion Interaction */
-  var headerHeight = $("header").height();
-  $(document).on("scroll",function() {
-    if ($(document).scrollTop() > headerHeight) {
-      $("header").addClass("header-scroll");
-    } else {
-      $("header").removeClass("header-scroll");
-    }
-  });
+  // var headerHeight = $("header").height();
+  // $(document).on("scroll",function() {
+  //   if ($(document).scrollTop() > headerHeight) {
+  //     $("header").addClass("header-scroll");
+  //   } else {
+  //     $("header").removeClass("header-scroll");
+  //   }
+  // });
 
   /* ---------------------------------------------------*/
 
