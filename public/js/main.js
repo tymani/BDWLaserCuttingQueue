@@ -41,6 +41,7 @@ $(document).ready(() => {
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
+      console.log("joined");
       //first element in list is current user on laser1
       //second element in list is current user on laser2
 
@@ -258,16 +259,21 @@ $(document).ready(() => {
   function renderQ(queue) {
     var thisname = getMeta('username');
 
-    addToQueue(queue[0].username,queue[0].cut_length,"currently-using");
-    addToQueue(queue[1].username,queue[1].cut_length,"currently-using");
+    if (queue.length != 0) {
+      addToQueue(queue[0].username,queue[0].cut_length,"currently-using");
+      addToQueue(queue[1].username,queue[1].cut_length,"currently-using");
 
-    for(var i = 2; i < queue.length; i++) {
-      if(queue[i].userid == userid) {
-        addToQueue(queue[i].username,queue[i].cut_length,"user");
-      } else {
-        addToQueue(queue[i].username,queue[i].cut_length,"non-user");
+      for(var i = 2; i < queue.length; i++) {
+        if(queue[i].userid == userid) {
+          addToQueue(queue[i].username,queue[i].cut_length,"user");
+        } else {
+          addToQueue(queue[i].username,queue[i].cut_length,"non-user");
+        }
       }
+
     }
+
+
 
   }
 
