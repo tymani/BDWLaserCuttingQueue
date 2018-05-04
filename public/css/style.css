@@ -69,6 +69,15 @@ body {
   /* color: #1c75bc; */
 }
 
+.delete-button {
+  border: 2px solid red;
+  color: red;
+  background-color: #e5e5e5;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .logo-text-container {
   margin: 30px;
 }
@@ -180,8 +189,21 @@ header {
   font-family: 'Avenir-Black';
 }
 .queue-header-elem {
-  width: 23.3vw;
+  /* width: 23.3vw; */
   padding: 10px;
+}
+
+.queue-elem {
+  padding: 10px;
+}
+
+.delete-queue-elem {
+  display: flex;
+  justify-content: center;
+}
+
+.queue-elem-num {
+  width: 1vw;
 }
 
 
@@ -550,3 +572,8 @@ footer p {
   top: 14vh;
   position: absolute;
 }
+
+/* .queue-delete-button {
+  position: absolute;
+  margin-left: 10vw;
+} */

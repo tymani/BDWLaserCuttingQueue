@@ -280,14 +280,20 @@ $(document).ready(() => {
     var newQueueElem;
     if(flag === "user") {
       newQueueElem = "<tr class='queue-elem-container selected'>"+
+                            "<td class='queue-elem'>"+13+"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
                             "<td class='queue-elem'>"+cutLength+"</td>"+
+                            "<td class='queue-elem delete-queue-elem'>"+
+              									"<input class='bdw-button delete-button' id='delete-queue-button' value='Delete' type='button'>"+
+              							"</td>"+
                         "</tr>";
 
     } else if (flag === "non-user") {
       newQueueElem = "<tr class='queue-elem-container'>"+
+                            "<td class='queue-elem'>"+13+"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
                             "<td class='queue-elem'>"+cutLength+"</td>"+
+                            "<td class='queue-elem'></td>"+
                         "</tr>";
     }else if(flag == "currently-using") {
       //tbd
