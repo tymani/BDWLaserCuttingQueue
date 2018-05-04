@@ -260,16 +260,26 @@ $(document).ready(() => {
     var thisname = getMeta('username');
 
     if (queue.length != 0) {
-      addToQueue(queue[0].username,queue[0].cut_length,"currently-using");
-      addToQueue(queue[1].username,queue[1].cut_length,"currently-using");
-
-      for(var i = 2; i < queue.length; i++) {
-        if(queue[i].userid == userid) {
-          addToQueue(queue[i].username,queue[i].cut_length,"user");
-        } else {
-          addToQueue(queue[i].username,queue[i].cut_length,"non-user");
+      if(queue.length == 1) {
+        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
+      } else if (queue.length == 2){
+        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
+        addToQueue(queue[1].username,queue[1].cut_length,"non-user");
+      } else {
+        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
+        addToQueue(queue[1].username,queue[1].cut_length,"non-user");
+        
+        for(var i = 2; i < queue.length; i++) {
+          if(queue[i].userid == userid) {
+            addToQueue(queue[i].username,queue[i].cut_length,"user");
+          } else {
+            addToQueue(queue[i].username,queue[i].cut_length,"non-user");
+          }
         }
       }
+
+
+
 
     }
 
