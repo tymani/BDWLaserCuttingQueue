@@ -74,7 +74,6 @@ $(document).ready(() => {
     //on reconnection after disconnection server need to send updated queue
 
   function sendNewQueueUser(username,length, phone_number, email) {
-    socket.emit("test");
     socket.emit("join", username, length, phone_number, email);
   };
 
@@ -167,10 +166,6 @@ $(document).ready(() => {
 
   //Adds user to the queue
   function submitForm () {
-    console.log("170");
-    socket.emit("test");
-    socket.emit("join", " ", " ", " ", " ");
-    console.log("173");
 
     //check that necessary parts of form are filled in
     var validForm = false;
@@ -208,9 +203,9 @@ $(document).ready(() => {
       }
 
       //send info to server
-      socket.emit("test");
-      socket.emit("join", " ", " ", " ", " ");
-      // sendNewQueueUser(username, selectedTime, null, userEmail);
+      // socket.emit("test");
+      // socket.emit("join", " ", " ", " ", " ");
+      sendNewQueueUser(username, selectedTime, null, userEmail);
 
     }
 

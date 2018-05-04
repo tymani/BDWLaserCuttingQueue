@@ -19,7 +19,7 @@ app.use("/", express.static(__dirname));
 var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 // var server = http.createServer(app);
-// var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server);
 
 var q = [];
 var ids = new Object();
@@ -69,12 +69,8 @@ io.sockets.on('connection', function(socket) {
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
 
-  socket.on("test", function(){
-    console.log("test worked, 73");
-  })
-
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
-    //socket.broadcast.emit('joined', socket.name);
+    socket.broadcast.emit('joined', socket.name);
 
     socket.id = generateID();
 
@@ -88,8 +84,6 @@ io.sockets.on('connection', function(socket) {
 
     // q.unshift(cred);
     q.push(cred);
-
-    console.log(cred.username);
 
     io.sockets.emit('joined', q);
   });
