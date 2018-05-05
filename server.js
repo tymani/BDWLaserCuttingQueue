@@ -8,6 +8,8 @@ var anyDB = require('any-db');
 var env = require('dotenv/config');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
+var laser_cutter1_time = 0;
+var laser_cutter2_time = 0;
 
 var io = require('socket.io').listen(server);
 server.listen(8080, function () {
@@ -67,11 +69,11 @@ io.sockets.on('connection', function(socket) {
 
   // console.log("connection, 67");
 
-  socket.emit('handshake', q); // Sends the newly connected client current state of the queue
+    socket.emit('handshake', q, getLowestTime()); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
 
-  socket.on("signin", function() {
-    socket.emit('handshake', q);
+    socket.on("signin", function() {
+    // socket.emit('handshake', q);
   });
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
@@ -86,6 +88,8 @@ io.sockets.on('connection', function(socket) {
       'email' : email
     };
 
+    addToLowestTime(length);
+
     // q.unshift(cred);
     q.push(cred);
 
@@ -93,14 +97,14 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('delete-user', function(username) {
-    console.log("should delete");
     removeUser(username);
-    socket.emit('deleted', username, q);
+    socket.emit('deleted', username, q, subtractFromHighestTime(username));
   });
 
   socket.on('up-next', function(userEmail){
     sendEmail(userEmail);
   });
+
 
 });
 
@@ -151,3 +155,39 @@ function generateID() {
   ids[id] = true;
   return id;
 }
+
+function getLowestTime(){
+  if (laser_cutter1_time <= laser_cutter2_time){
+    return laser_cutter1_time;
+  }
+  else{
+    return laser_cutter2_time;
+  }
+};
+
+function addToLowestTime(user_time){
+  if (laser_cutter1_time <= laser_cutter2_time){
+    laser_cutter1_time += user_time;
+  }
+  else{
+    laser_cutter2_time += user_time;
+  }
+};
+
+function subtractFromHighestTime(username){
+  for (i = 0; i < q.length; i++) {
+    var entry = q[i];
+    if (entry['username'] == username) {
+      var user_time = entry[i].cut_length;
+    }
+  }
+
+  if (laser_cutter1_time >= laser_cutter2_time){
+    laser_cutter1_time -= user_time;
+  }
+  else{
+    laser_cutter2_time -= user_time;
+  }
+
+  return entry[i].cut_length;
+};

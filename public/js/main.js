@@ -5,17 +5,13 @@ var username;
 var userEmail;
 var socket = io.connect();
 var should_email = false;
+var global_time_remaining = 0;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
   username = profile.getName();
   userEmail = profile.getEmail();
-  // console.log('Name: ' + profile.getName());
-  // console.log('Image URL: ' + profile.getImageUrl());
-  // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-  // document.getElementById('user').innerHTML = profile.getEmail();
-  // document.getElementByID('user').innerHTML = profile.getEmail();
   var signInButton = document.getElementById("sign-in");
   signInButton.classList.add("hidden");
   var signOutButton = document.getElementsByClassName("sign-out-container")[0];
@@ -38,42 +34,43 @@ $(document).ready(() => {
   /*******************************************************************/
 
     // Server emits this on connection to give initial state of the queue
-    socket.on('handshake', function(queue) {
-      var timeRemaining = 0;
+    socket.on('handshake', function(queue, timeRemaining) {
+      global_time_remaining = timeRemaining;
+      // var timeRemaining = 0;
+      //
+      // for(var i = 0; i < queue.length; i++) {
+      //   if(queue[i].userEmail != userEmail) {
+      //     timeRemaining += parseInt(queue[i].cut_length);
+      //   } else {
+      //     break;
+      //   }
+      //
+      // }
 
-      for(var i = 0; i < queue.length; i++) {
-        if(queue[i].userEmail != userEmail) {
-          timeRemaining += parseInt(queue[i].cut_length);
-        } else {
-          break;
-        }
-
-      }
-
-      updateTimer(timeRemaining);
+      updateTimer(global_time_remaining);
       renderQ(queue);
     });
 
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
-      console.log("QUEUE: " + queue);
+      // console.log("QUEUE: " + queue);
       //first element in list is current user on laser1
       //second element in list is current user on laser2
 
       //make ticking timer with total time in list
-      var timeRemaining = 0;
+      // var timeRemaining = 0;
+      //
+      // for(var i = 0; i < queue.length; i++) {
+      //   if(queue[i].userid != userId) {
+      //     timeRemaining += parseInt(queue[i].cut_length);
+      //   } else {
+      //     break;
+      //   }
+      //
+      // }
 
-      for(var i = 0; i < queue.length; i++) {
-        if(queue[i].userid != userId) {
-          timeRemaining += parseInt(queue[i].cut_length);
-        } else {
-          break;
-        }
-
-      }
-
-      updateTimer(timeRemaining);
+      // updateTimer(timeRemaining);
 
       //print rest of list
       //mark our current user in the list
@@ -83,19 +80,11 @@ $(document).ready(() => {
     });
 
 
-    socket.on('deleted', function(username, queue) {
-      var timeRemaining = 0;
+    socket.on('deleted', function(username, queue, time_difference) {
 
-      for(var i = 0; i < queue.length; i++) {
-        if(queue[i].userid != userId) {
-          timeRemaining += parseInt(queue[i].cut_length);
-        } else {
-          break;
-        }
+      global_time_remaining -= time_difference;
 
-      }
-
-      updateTimer(timeRemaining);
+      updateTimer(global_time_remaining);
 
       renderQ(queue);
       if (username == getMeta('username')) {
@@ -260,8 +249,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     signOut();
-    console.log("calls delete");
-    socket.emit('delete-user', username);
+    // socket.emit('delete-user', username);
 
   });
 
@@ -309,6 +297,7 @@ $(document).ready(() => {
             if(i === 0||i === 1) {
               //add youre up
               $(".youre-up-title").removeClass("hidden");
+
               if(should_email === true){
                 socket.emit("up-next", userEmail);
               }
@@ -412,7 +401,7 @@ var currHour = 0;
 var currMin = 0;
 
 
-updateTimer(0);
+// updateTimer(0);
 //each queue element has the following attributes
 // userid
 //time
@@ -422,13 +411,8 @@ updateTimer(0);
 
 // updates the current time on the timer
 //timeRemaining : time remaining until user can sign up
-function updateTimer(timeRemaining) {
+function updateTimer(newTime) {
   //change the current timer time remaining to new timeRemaining
-  changeTimer(timeRemaining);
-
-}
-
-function changeTimer(newTime) {
   var timer = $(".timer-time")[0];
   //stop old timer
   stopTickingTimer();
@@ -456,9 +440,8 @@ function changeTimer(newTime) {
   //start ticking timer
   ticking = setInterval(function () {tickingTimer();}, 60000);
 
-
-
 }
+
 
 
 function printTimer(hours, minutes) {
