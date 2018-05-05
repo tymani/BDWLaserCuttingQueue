@@ -95,7 +95,7 @@ $(document).ready(() => {
       }
 
       updateTimer(timeRemaining);
-      
+
       renderQ(queue);
       if (username == getMeta('username')) {
           //TODO This client has been removed from queue.
@@ -151,6 +151,7 @@ $(document).ready(() => {
   $('body').on('click', "#delete-queue-button",function () {
     console.log("delete");
     $(".join-queue-form").removeClass("hidden");
+    $(".youre-up-title").addClass("hidden");
     socket.emit('delete-user', username);
   });
 
