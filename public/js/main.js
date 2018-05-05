@@ -297,8 +297,13 @@ $(document).ready(() => {
             if(i === 0||i === 1) {
               //add youre up
               $(".youre-up-title").removeClass("hidden");
-
+              socket.emit("up-next", userEmail);
             }
+
+            // else if(i === 2 || i ===3){
+            //   socket.emit("up-next", userEmail);
+            // }
+
             addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
           } else {
             addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
