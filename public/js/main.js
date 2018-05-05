@@ -56,6 +56,7 @@ $(document).ready(() => {
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
+      console.log("QUEUE: " + queue);
       //first element in list is current user on laser1
       //second element in list is current user on laser2
 
@@ -241,6 +242,9 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     signOut();
+    console.log("calls delete");
+    socket.emit('delete-user', username);
+
   });
 
 
@@ -294,7 +298,7 @@ $(document).ready(() => {
             if(i === 0||i === 1) {
               //add youre up
               $(".youre-up-title").removeClass("hidden");
-              socket.emit("up-next", userEmail);
+              // socket.emit("up-next", userEmail);
             }
 
             // else if(i === 2 || i ===3){

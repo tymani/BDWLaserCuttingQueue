@@ -74,7 +74,6 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
-    socket.broadcast.emit('joined', socket.name);
 
     socket.id = generateID();
 
@@ -93,6 +92,7 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('delete-user', function(username) {
+    console.log("should delete");
     removeUser(username);
     socket.emit('deleted', username, q);
   });
