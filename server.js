@@ -134,12 +134,12 @@ app.get('*', function(request, response){
 });
 
 // Function Declarations
-function removeUser(username) {
+function removeUser(userid) {
   for (i = 0; i < q.length; i++) {
     var entry = q[i];
-    if (entry['username'] == username) {
+    if (entry['userid'] == userid) {
       q.splice(i, 1);
-      delete(ids[entry['id']]);
+      ids.delete(userid)
       io.sockets.emit('deleted', entry['username'], q);
       return
     }
