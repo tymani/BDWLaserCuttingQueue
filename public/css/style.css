@@ -577,3 +577,16 @@ footer p {
   position: absolute;
   margin-left: 10vw;
 } */
+
+
+.youre-up-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.youre-up-title {
+  font-family: "Avenir-Italic";
+  font-size: 45px;
+  margin: 20px;
+}

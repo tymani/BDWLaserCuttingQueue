@@ -69,6 +69,10 @@ io.sockets.on('connection', function(socket) {
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
 
+  socket.on("signin", function() {
+    socket.emit('handshake', q);
+  });
+
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
     socket.broadcast.emit('joined', socket.name);
 
@@ -121,7 +125,7 @@ function removeUser(username) {
     var entry = q[i];
     if (entry['username'] == username) {
       q.splice(i, 1);
-      delete ids[userid];
+      delete(ids[entry['id']]);
       io.sockets.emit('deleted', entry['username'], q);
       return
     }

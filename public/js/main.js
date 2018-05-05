@@ -3,7 +3,7 @@
 var userId = -1;
 var username;
 var userEmail;
-
+var socket = io.connect();
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -21,11 +21,14 @@ function onSignIn(googleUser) {
   signOutButton.classList.remove("hidden");
   var joinQueueButton = document.getElementById("join-queue-form");
   joinQueueButton.classList.remove("hidden");
+  console.log("SIGNIN");
+  //becuase race conditions between socket adnd signin to mark our curr user correctly
+  socket.emit("signin");
 }
 
 $(document).ready(() => {
 
-  var socket = io.connect();
+
 
   // socket.emit("test");
 
@@ -35,6 +38,18 @@ $(document).ready(() => {
 
     // Server emits this on connection to give initial state of the queue
     socket.on('handshake', function(queue) {
+      var timeRemaining = 0;
+
+      for(var i = 0; i < queue.length; i++) {
+        if(queue[i].userEmail != userEmail) {
+          timeRemaining += parseInt(queue[i].cut_length);
+        } else {
+          break;
+        }
+
+      }
+
+      updateTimer(timeRemaining);
       renderQ(queue);
     });
 
@@ -49,7 +64,7 @@ $(document).ready(() => {
 
       for(var i = 0; i < queue.length; i++) {
         if(queue[i].userid != userId) {
-          timeRemaining += queue[i].cut_length;
+          timeRemaining += parseInt(queue[i].cut_length);
         } else {
           break;
         }
@@ -60,6 +75,7 @@ $(document).ready(() => {
 
       //print rest of list
       //mark our current user in the list
+      renderQ(queue);
 
 
     });
@@ -182,7 +198,7 @@ $(document).ready(() => {
         validForm = true;
 
         //add our user to the queue
-        addToQueue(username, selectedTime,"user");
+        //addToQueue(username, selectedTime,"user");
 
     }
 
@@ -197,9 +213,14 @@ $(document).ready(() => {
       formDisappear();
 
       //delete join queue button
-      while ($(".header-buttons-container")[0].hasChildNodes()) {
-        $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
+      while ($(".join-queue-form-container")[0].hasChildNodes()) {
+        $(".join-queue-form-container")[0].removeChild($(".join-queue-form-container")[0].lastChild);
       }
+
+
+      // while ($(".header-buttons-container")[0].hasChildNodes()) {
+      //   $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
+      // }
 
       //delete form
       while ($(".form-page")[0].hasChildNodes()) {
@@ -236,6 +257,7 @@ $(document).ready(() => {
     signOutButton.classList.add("hidden");
     var joinQueueButton = document.getElementById("join-queue-form");
     joinQueueButton.classList.add("hidden");
+
   }
 
   /* --------------------------------------------------- */
@@ -262,39 +284,34 @@ $(document).ready(() => {
   function renderQ(queue) {
     var thisname = getMeta('username');
 
-    if (queue.length != 0) {
-      if(queue.length == 1) {
-        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
-      } else if (queue.length == 2){
-        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
-        addToQueue(queue[1].username,queue[1].cut_length,"non-user");
-      } else {
-        addToQueue(queue[0].username,queue[0].cut_length,"non-user");
-        addToQueue(queue[1].username,queue[1].cut_length,"non-user");
-
-        for(var i = 2; i < queue.length; i++) {
-          if(queue[i].userid == userid) {
-            addToQueue(queue[i].username,queue[i].cut_length,"user");
-          } else {
-            addToQueue(queue[i].username,queue[i].cut_length,"non-user");
-          }
-        }
+//TODO: empty queuetable before rednering queue
+      while ($(".queue-table")[0].hasChildNodes()) {
+        $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
       }
 
+        for(var i = 0; i < queue.length; i++) {
+          console.log(queue[i].email + " <-- queue " + userEmail + " <-- userEmail");
+          if(queue[i].email === userEmail) {
+            if(i === 0||i === 1) {
+              //add youre up
+              $(".youre-up-title").removeClass("hidden");
 
-
-
-    }
+            }
+            addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
+          } else {
+            addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+          }
+        }
 
 
 
   }
 
-  function addToQueue(name,cutLength, flag) {
+  function addToQueue(num, name,cutLength, flag) {
     var newQueueElem;
     if(flag === "user") {
       newQueueElem = "<tr class='queue-elem-container selected'>"+
-                            "<td class='queue-elem'>"+13+"</td>"+
+                            "<td class='queue-elem'>"+ num +"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
                             "<td class='queue-elem'>"+cutLength+"</td>"+
                             "<td class='queue-elem delete-queue-elem'>"+
@@ -304,7 +321,7 @@ $(document).ready(() => {
 
     } else if (flag === "non-user") {
       newQueueElem = "<tr class='queue-elem-container'>"+
-                            "<td class='queue-elem'>"+13+"</td>"+
+                            "<td class='queue-elem'>"+num +"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
                             "<td class='queue-elem'>"+cutLength+"</td>"+
                             "<td class='queue-elem'></td>"+
@@ -374,7 +391,7 @@ var currHour = 0;
 var currMin = 0;
 
 
-changeTimer(100);
+updateTimer(0);
 //each queue element has the following attributes
 // userid
 //time
@@ -489,6 +506,14 @@ function stopTickingTimer() {
 function printEmptyQueuePage() {
   console.log("TBD");
 }
+
+
+// function startCountdown(cutLength) {
+//   //print cutLength
+//   printTimer(0,cutLength);
+//
+//
+// }
 
 
 //make timeremaingin function
