@@ -136,6 +136,8 @@ $(document).ready(() => {
   });
 
   $('body').on('click', "#delete-queue-button",function () {
+    console.log("delete");
+    $(".join-queue-form").removeClass("hidden");
     socket.emit('delete-user', username);
   });
 
@@ -213,9 +215,10 @@ $(document).ready(() => {
       formDisappear();
 
       //delete join queue button
-      while ($(".join-queue-form-container")[0].hasChildNodes()) {
-        $(".join-queue-form-container")[0].removeChild($(".join-queue-form-container")[0].lastChild);
-      }
+      $(".join-queue-form").addClass("hidden");
+      // while ($(".join-queue-form-container")[0].hasChildNodes()) {
+      //   $(".join-queue-form-container")[0].removeChild($(".join-queue-form-container")[0].lastChild);
+      // }
 
 
       // while ($(".header-buttons-container")[0].hasChildNodes()) {
@@ -223,9 +226,9 @@ $(document).ready(() => {
       // }
 
       //delete form
-      while ($(".form-page")[0].hasChildNodes()) {
-        $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
-      }
+      // while ($(".form-page")[0].hasChildNodes()) {
+      //   $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
+      // }
 
       //send info to server
       // socket.emit("test");
