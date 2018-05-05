@@ -83,6 +83,19 @@ $(document).ready(() => {
 
 
     socket.on('deleted', function(username, queue) {
+      var timeRemaining = 0;
+
+      for(var i = 0; i < queue.length; i++) {
+        if(queue[i].userid != userId) {
+          timeRemaining += parseInt(queue[i].cut_length);
+        } else {
+          break;
+        }
+
+      }
+
+      updateTimer(timeRemaining);
+      
       renderQ(queue);
       if (username == getMeta('username')) {
           //TODO This client has been removed from queue.
