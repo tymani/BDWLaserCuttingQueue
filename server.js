@@ -22,6 +22,7 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 var io = require('socket.io').listen(server);
 
 var q = [];
+
 var ids = new Object();
 
 var hr = (new Date()).getHours();

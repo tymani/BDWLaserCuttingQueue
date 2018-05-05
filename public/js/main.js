@@ -298,6 +298,7 @@ $(document).ready(() => {
         for(var i = 0; i < queue.length; i++) {
           console.log(queue[i].email + " <-- queue " + userEmail + " <-- userEmail");
           if(queue[i].email === userEmail) {
+            $(".join-queue-form").addClass("hidden");
             if(i === 0||i === 1) {
               //add youre up
               $(".youre-up-title").removeClass("hidden");
