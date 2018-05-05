@@ -51,6 +51,12 @@ body {
   margin: 20px;
 }
 
+#form-#form-submit-button {
+  margin: 20px;
+}-button {
+  margin: 20px;
+}
+
 .bdw-button {
   display: block;
   cursor: pointer;
@@ -364,6 +370,15 @@ header {
   justify-content: flex-start;
 }
 
+.monitor-password-module {
+  margin: 20px;
+  margin-top: 60px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 
 .phone-number-module {
   margin: 20px;
@@ -394,7 +409,7 @@ header {
 }
 
 
-form input[type=text] {
+form input[type=text], form input[type=password]{
   height: 30px;
   border: 1px solid black;
   width: 250px;
@@ -519,7 +534,10 @@ display: none;
 }
 
 footer {
-  height: 5vh;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  position: fixed;
   display: flex;
   flex-direction: row;
   border-top: 1px solid black;
@@ -546,6 +564,14 @@ footer p {
 #form-name-form {
   margin-left: 20px;
 }
+
+#form-phone-number-form {
+  margin-left: 20px;
+}
+#form-monitor-password-form{
+  margin-left: 20px;
+}
+
 
 #join-queue-test {
   background-color: goldenrod;
