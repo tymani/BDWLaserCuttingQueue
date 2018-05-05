@@ -534,10 +534,7 @@ display: none;
 }
 
 footer {
-  bottom: 0;
-  left: 0;
   width: 100vw;
-  position: fixed;
   display: flex;
   flex-direction: row;
   border-top: 1px solid black;
