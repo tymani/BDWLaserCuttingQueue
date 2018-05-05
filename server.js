@@ -26,7 +26,7 @@ var ids = new Object();
 
 var hr = (new Date()).getHours();
 
-function sendEmail(){
+function sendEmail(userEmail){
 
   nodemailer.createTestAccount((err, account) => {
       // create reusable transporter object using the default SMTP transport
@@ -41,7 +41,7 @@ function sendEmail(){
       // setup email data with unicode symbols
       let mailOptions = {
           from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
-          to: 'nicholas_faulkner@brown.edu', // list of receivers
+          to: userEmail, // list of receivers
           subject: 'You\'re Next in Line for the Laser Cutter!', // Subject line
           text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop.', // plain text body
           // html: '<img src="__dirname + public/img/bdw-logo.png">' // html body
@@ -95,6 +95,10 @@ io.sockets.on('connection', function(socket) {
   socket.on('delete-user', function(username) {
     removeUser(username);
     socket.emit('deleted', username, q);
+  });
+
+  socket.on('up-next', function(userEmail){
+    sendEmail(userEmail);
   });
 
 });
