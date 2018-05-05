@@ -4,6 +4,7 @@ var userId = -1;
 var username;
 var userEmail;
 var socket = io.connect();
+var should_email = false;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -284,16 +285,8 @@ $(document).ready(() => {
 
   /* Phone Checkbox Form Interaction */
   //phone number checkbox clicked
-  $("#phone-notification-checkbox input").click(function () {
-    //make phone number appear if checked
-    //make disappear if unchecked
-    if($("#phone-notification-checkbox input")[0].checked) {
-      $(".phone-number-module").removeClass("hidden");
-      $(".form-content-box").css("height", "400px");
-    } else {
-      $(".phone-number-module").addClass("hidden");
-      $(".form-content-box").css("height", "320px");
-    }
+  $("#email-notification-checkbox input").click(function () {
+    should_email = true;
   });
 
   /* --------------------------------------------------- */
@@ -316,7 +309,9 @@ $(document).ready(() => {
             if(i === 0||i === 1) {
               //add youre up
               $(".youre-up-title").removeClass("hidden");
-              // socket.emit("up-next", userEmail);
+              if(should_email === true){
+                socket.emit("up-next", userEmail);
+              }
             }
 
             // else if(i === 2 || i ===3){
