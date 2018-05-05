@@ -23,9 +23,8 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 // var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
-var q = [];
-
-var ids = new Object();
+var q = [null, null];
+var ids = new Map();
 
 var hr = (new Date()).getHours();
 
@@ -69,11 +68,17 @@ io.sockets.on('connection', function(socket) {
 
   // console.log("connection, 67");
 
-    socket.emit('handshake', q, getLowestTime()); // Sends the newly connected client current state of the queue
+  socket.emit('handshake', q, getLowestTime()); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
 
-    socket.on("signin", function() {
-    // socket.emit('handshake', q);
+  socket.on("signin", function(username, email) {
+    socket.emit('handshake', q);
+
+    if (username == null || email == null) return; // Invalid parameter
+
+    var userid = generateID();
+    ids.set(userid, [username, email])
+
   });
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
@@ -152,8 +157,48 @@ function generateID() {
   if (ids.hasOwnProperty(id)) {
     return generateID();
   }
-  ids[id] = true;
   return id;
+}
+
+/*
+  Function that 'pulls' the next person on the queue to start cutting.
+  It checks if the cutter are empty and there exists a person on the queue to pull,
+  so the server should call this function WHENEVER the lasercutter is potentially not occupied.
+
+  Parameter: None
+
+  Return type: Javascript Array, [<userid>, <Lasercutter Number>]
+*/
+function pulltoCutter() {
+  var lc_num;
+  if (q[0] == null) {
+    lc_num = 0;
+  }
+  else if (q[1] == null) {
+    lc_num = 1;
+  } else {
+    console.log("Lasercutters are all occupied")
+    return null;
+  }
+
+  if (q.length < 3) {
+    console.log("Lasercutter is empty, but no person on the queue to pull")
+    return null;
+  }
+
+  var next_person = q[2];
+  var userid = next_person['userid'];
+  q[lc_num] = next_person;
+  q.splice(2,1);
+
+  io.sockets.emit('handshake', q) // Send the updated queue.
+
+  setTimeout( function(uid) { // Sets timeout to function that handles lasercutter timeout
+    removeUser(uid);
+    pulltoCutter();
+  }, next_person['cut_length']*60*1000, userid)
+
+  return [userid, lc_num]
 }
 
 function getLowestTime(){
