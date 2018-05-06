@@ -141,16 +141,7 @@ app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
 });
 
-/*
-  Function that removes user from the Queue.
-  Splice the person out emits 'deleted' to all users.
-  It DOES NOT remove user currently cutting. You'll have to refer to
-  finishCutting() to do that.
-
-  Parameters: User's email address
-
-  Return: none.
-*/
+// Function Declarations
 function removeUser(email) {
   for (i = 0; i < q.length; i++) {
     var entry = q[i];
@@ -248,19 +239,23 @@ function pulltoCutter() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for (var i = 0; i < q.length; i++ ){
+  for (var i = 0; i < q.length; i++){
     if (i === 0){
       lasercutter_1 += q[i].cut_length;
+      ls_1.push(q[i]);
       q[i].time_remaining = lasercutter_1;
     } else if (i === 1) {
       lasercutter_2 += q[i].cut_length;
-      [i].time_remaining = lasercutter_2;
+      ls_2.push(q[i]);
+      q[i].time_remaining = lasercutter_2;
     } else {
       if(lasercutter_1 > lasercutter_2) {
         lasercutter_2 += q[i].cut_length;
-        [i].time_remaining = lasercutter_2;
+        ls_2.push(q[i]);
+        q[i].time_remaining = lasercutter_2;
       }else{
         lasercutter_1 += q[i].cut_length;
+        ls_1.push(q[i]);
         q[i].time_remaining = lasercutter_1;
       }
     }

@@ -260,7 +260,6 @@ $(document).ready(() => {
 
   function renderQ(queue) {
     var timeRemaining = 0;
-    var thisname = getMeta('username');
 
       while ($(".queue-table")[0].hasChildNodes()) {
         $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
