@@ -133,7 +133,7 @@ $(document).ready(() => {
     console.log("delete");
     $(".join-queue-form").removeClass("hidden");
     $(".youre-up-title").addClass("hidden");
-    socket.emit('delete-user', username);
+    socket.emit('delete-user', userEmail);
   });
 
 
@@ -225,8 +225,14 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
+<<<<<<< HEAD
     socket.emit('delete-user', username);
     signOut();
+=======
+
+    console.log("calls delete");
+    socket.emit('delete-user', userEmail);
+>>>>>>> f8002344e461009c04e6d8ca9f1ca6b5a5de3849
 
   });
 
