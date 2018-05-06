@@ -89,6 +89,8 @@ io.sockets.on('connection', function(socket) {
     q.push(cred);
 
     io.sockets.emit('joined', q);
+
+    pulltoCutter();
   });
 
   socket.on('delete-user', function(userEmail) {
