@@ -217,51 +217,41 @@ function pulltoCutter() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for (var i = 0; i < q.length; i++ ){
-    if (i === 0){
-      lasercutter_1 += q[i].cut_length;
-      q[i].time_remaining = lasercutter_1;
-    } else if (i === 1) {
-      lasercutter_2 += q[i].cut_length;
-      [i].time_remaining = lasercutter_2;
-    } else {
-      if(lasercutter_1 > lasercutter_2) {
-        lasercutter_2 += q[i].cut_length;
-        [i].time_remaining = lasercutter_2;
-      }else{
+  for (var i = 0; i < q.length; i++){
+    console.log("index " + i);
+    console.log(q[i]);
+    console.log("queue length " + q.length);
+    if(q[i] != null) {
+      if (i === 0){
         lasercutter_1 += q[i].cut_length;
         q[i].time_remaining = lasercutter_1;
+      } else if (i === 1) {
+        lasercutter_2 += q[i].cut_length;
+        q[i].time_remaining = lasercutter_2;
+      } else {
+        if(lasercutter_1 > lasercutter_2) {
+          lasercutter_2 += q[i].cut_length;
+          [i].time_remaining = lasercutter_2;
+        }else{
+          lasercutter_1 += q[i].cut_length;
+          q[i].time_remaining = lasercutter_1;
+        }
       }
     }
   }
 }
 
 function tickCurrentUsers() {
-  if (q.length === 1) {
-    if(q[0].time_remaining >= 5){
-      q[0].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
-      pulltoCutter();
+  for(var i = 0; i < q.length; i++){
+    if (q[i] != null) {
+      if(q[i].time_remaining >= 5){
+        q[i].time_remaining -= 5;
+        calculateTime();
+        socket.emit("handshake",q);
+      } else {
+        pulltoCutter();
+      }
     }
-  } else if (q.length >= 2) {
-    if(q[0].time_remaining >= 5){
-      q[0].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
-      pulltoCutter();
-    }
-
-    if(q[1].time_remaining >= 5){
-      q[1].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
-      pulltoCutter();
-    }
-
-
   }
+
 }
