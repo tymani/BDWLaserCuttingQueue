@@ -220,7 +220,7 @@ function pulltoCutter() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for var i = 0; i < q.length; i++ {
+  for (var i = 0; i < q.length; i++ ){
     if (i === 0){
       lasercutter_1 += q[i].cutLength;
       q[i].time_remaining = lasercutter_1;

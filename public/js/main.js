@@ -297,6 +297,7 @@ $(document).ready(() => {
 
   //TODO This is a function that will take care of rendering the new state of the queue
   function renderQ(queue) {
+    var timeRemaining = 0;
     var thisname = getMeta('username');
 
 //TODO: empty queuetable before rednering queue
@@ -307,6 +308,7 @@ $(document).ready(() => {
         for(var i = 0; i < queue.length; i++) {
           console.log(queue[i].email + " <-- queue " + userEmail + " <-- userEmail");
           if(queue[i].email === userEmail) {
+            changeTimer(queue[i].time_remaining);
             $(".join-queue-form").addClass("hidden");
             if(i === 0||i === 1) {
               //add youre up
