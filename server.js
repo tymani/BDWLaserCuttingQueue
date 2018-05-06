@@ -140,18 +140,9 @@ app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
 });
 
-/*
-  Function that removes user from the Queue.
-  Splice the person out emits 'deleted' to all users.
-  It DOES NOT remove user currently cutting. You'll have to refer to
-  finishCutting() to do that.
-
-  Parameters: User's email address
-
-  Return: none.
-*/
+// Function Declarations
 function removeUser(email) {
-  for (i = 2; i < q.length; i++) {
+  for (i = 0; i < q.length; i++) {
     var entry = q[i];
     if (entry['email'] == email) {
       q.splice(i, 1);
@@ -161,17 +152,6 @@ function removeUser(email) {
     }
   }
   console.log("Invalid removeUser request with ID: " + userid)
-}
-
-/*
-  Function that removes user from the lasercutter
-*/
-function finishCutting(c_num) {
-  var entry = q[c_num]
-  q[c_num] = null;
-  ids.delete(entry['email'])
-  pulltoCutter();
-  calculateTime();
 }
 
 
@@ -238,40 +218,54 @@ function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
   for (var i = 0; i < q.length; i++){
-    console.log("index " + i);
-    console.log(q[i]);
-    console.log("queue length " + q.length);
-    if(q[i] != null) {
-      if (i === 0){
-        lasercutter_1 += q[i].cut_length;
-        q[i].time_remaining = lasercutter_1;
-      } else if (i === 1) {
+    if (i === 0){
+      lasercutter_1 += q[i].cut_length;
+      ls_1.push(q[i]);
+      q[i].time_remaining = lasercutter_1;
+    } else if (i === 1) {
+      lasercutter_2 += q[i].cut_length;
+      ls_2.push(q[i]);
+      q[i].time_remaining = lasercutter_2;
+    } else {
+      if(lasercutter_1 > lasercutter_2) {
         lasercutter_2 += q[i].cut_length;
+        ls_2.push(q[i]);
         q[i].time_remaining = lasercutter_2;
-      } else {
-        if(lasercutter_1 > lasercutter_2) {
-          lasercutter_2 += q[i].cut_length;
-          [i].time_remaining = lasercutter_2;
-        }else{
-          lasercutter_1 += q[i].cut_length;
-          q[i].time_remaining = lasercutter_1;
-        }
+      }else{
+        lasercutter_1 += q[i].cut_length;
+        ls_1.push(q[i]);
+        q[i].time_remaining = lasercutter_1;
       }
     }
   }
 }
 
 function tickCurrentUsers() {
-  for(var i = 0; i < q.length; i++){
-    if (q[i] != null) {
-      if(q[i].time_remaining >= 5){
-        q[i].time_remaining -= 5;
-        calculateTime();
-        socket.emit("handshake",q);
-      } else {
-        pulltoCutter();
-      }
+  if (q.length === 1) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
     }
-  }
+  } else if (q.length >= 2) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
 
+    if(q[1].time_remaining >= 5){
+      q[1].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
+
+
+  }
 }

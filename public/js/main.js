@@ -34,12 +34,10 @@ $(document).ready(() => {
       var timeRemaining = 0;
 
       for(var i = 0; i < queue.length; i++) {
-        if(queue[i] != null){
-          if(queue[i].userEmail != userEmail) {
-            timeRemaining += parseInt(queue[i].cut_length);
-          } else {
-            break;
-          }
+        if(queue[i].userEmail != userEmail) {
+          timeRemaining += parseInt(queue[i].cut_length);
+        } else {
+          break;
         }
 
       }
@@ -59,14 +57,12 @@ $(document).ready(() => {
       var timeRemaining = 0;
 
       for(var i = 0; i < queue.length; i++) {
-        if(queue[i] != null) {
-          if(queue[i].userid != userId) {
-            timeRemaining += parseInt(queue[i].cut_length);
-          } else {
-            break;
-          }
+        if(queue[i].userid != userId) {
+          timeRemaining += parseInt(queue[i].cut_length);
+        } else {
+          break;
         }
-      
+
       }
 
       updateTimer(timeRemaining);
@@ -270,25 +266,22 @@ $(document).ready(() => {
       }
 
         for(var i = 0; i < queue.length; i++) {
-          //console.log(queue[i].email + " <-- queue " + userEmail + " <-- userEmail");
-          if (queue[i] !== null) {
-            if(queue[i].email === userEmail) {
-              changeTimer(queue[i].time_remaining);
-              $(".join-queue-form").addClass("hidden");
-              if(i === 0||i === 1) {
-                //add youre up
-                $(".youre-up-title").removeClass("hidden");
-                if(should_email === true){
-                  socket.emit("up-next", userEmail);
-                }
+          console.log(queue[i].email + " <-- queue " + userEmail + " <-- userEmail");
+          if(queue[i].email === userEmail) {
+            changeTimer(queue[i].time_remaining);
+            $(".join-queue-form").addClass("hidden");
+            if(i === 0||i === 1) {
+              //add youre up
+              $(".youre-up-title").removeClass("hidden");
+              if(should_email === true){
+                socket.emit("up-next", userEmail);
               }
-
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
-            } else {
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
             }
-          }
 
+            addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
+          } else {
+            addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+          }
         }
 
 
