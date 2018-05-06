@@ -21,9 +21,8 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 // var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
-var q = [];
-
-var ids = new Object();
+var q = [null, null];
+var ids = new Map();
 
 var hr = (new Date()).getHours();
 
@@ -79,7 +78,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
 
-    socket.id = generateID();
+    ids.set(email, username);
 
     var cred = {
       'username': username,
@@ -102,8 +101,9 @@ io.sockets.on('connection', function(socket) {
     io.sockets.emit('joined', q);
   });
 
-  socket.on('delete-user', function(username) {
+  socket.on('delete-user', function(userEmail) {
     console.log("should delete");
+<<<<<<< HEAD
     removeUser(username);
 
     if(q.length === 0) {
@@ -112,6 +112,10 @@ io.sockets.on('connection', function(socket) {
       }
     }
     socket.emit('deleted', username, q);
+=======
+    removeUser(userEmail);
+    socket.emit('deleted', ids.get(userEmail), q);
+>>>>>>> f8002344e461009c04e6d8ca9f1ca6b5a5de3849
   });
 
   socket.on('up-next', function(userEmail){
@@ -141,12 +145,12 @@ app.get('*', function(request, response){
 });
 
 // Function Declarations
-function removeUser(username) {
+function removeUser(email) {
   for (i = 0; i < q.length; i++) {
     var entry = q[i];
-    if (entry['username'] == username) {
+    if (entry['email'] == email) {
       q.splice(i, 1);
-      delete(ids[entry['id']]);
+      ids.delete(email)
       io.sockets.emit('deleted', entry['username'], q);
       return
     }
@@ -154,6 +158,11 @@ function removeUser(username) {
   console.log("Invalid removeUser request with ID: " + userid)
 }
 
+
+/*
+  Function that generates random ID of length 10.
+  Currently not Used.
+*/
 function generateID() {
   var id = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -161,11 +170,52 @@ function generateID() {
   for (var i = 0; i < 10; i++)
     id += possible.charAt(Math.floor(Math.random() * possible.length));
 
-  if (ids.hasOwnProperty(id)) {
+  if (ids.has(id)) {
     return generateID();
   }
-  ids[id] = true;
   return id;
+}
+
+/*
+  Function that 'pulls' the next person on the queue to start cutting.
+  It checks if the cutter are empty and there exists a person on the queue to pull,
+  so the server should call this function WHENEVER the lasercutter is potentially not occupied.
+
+  Parameter: None
+
+  Return type: Javascript Array, [<userid>, <Lasercutter Number>]
+*/
+function pulltoCutter() {
+  var lc_num;
+  if (q[0] == null) {
+    lc_num = 0;
+  }
+  else if (q[1] == null) {
+    lc_num = 1;
+  } else {
+    console.log("Lasercutters are all occupied")
+    return null;
+  }
+
+  if (q.length < 3) {
+    console.log("Lasercutter is empty, but no person on the queue to pull")
+    return null;
+  }
+
+  var next_person = q[2];
+  var user_em = next_person['email'];
+  q[lc_num] = next_person;
+  q.splice(2,1);
+
+  io.sockets.emit('handshake', q) // Send the updated queue.
+
+  setTimeout( function(em) {
+    removeUser(em);
+    calculateTime();
+    pulltoCutter();
+  }, next_person['cut_length']*60*1000, user_em)
+
+  return [user_em, lc_num]
 }
 
 function calculateTime() {
