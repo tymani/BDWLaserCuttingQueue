@@ -83,11 +83,20 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
 
-    socket.id = generateID();
+    var userid = null;
+
+    for (var [k,v] of ids.entries()) {
+      if (v[1] == email) {
+        userid = k;
+        break;
+      }
+    }
+
+    if (userid == null) return; // This user is not signed in.
 
     var cred = {
       'username': username,
-      'id' : socket.id,
+      'id' : userid,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
       'email' : email
@@ -99,6 +108,8 @@ io.sockets.on('connection', function(socket) {
     q.push(cred);
 
     io.sockets.emit('joined', q);
+
+    pulltoCutter();
   });
 
   socket.on('delete-user', function(username) {
