@@ -68,7 +68,7 @@ io.sockets.on('connection', function(socket) {
 
   // console.log("connection, 67");
 
-  socket.emit('handshake', q, getLowestTime()); // Sends the newly connected client current state of the queue
+  socket.emit('handshake', q); // Sends the newly connected client current state of the queue
   //^ can we send the userid here instead???
 
   socket.on("signin", function(username, email) {
@@ -90,10 +90,11 @@ io.sockets.on('connection', function(socket) {
       'id' : socket.id,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
+      "time_remaining": null,
       'email' : email
     };
 
-    addToLowestTime(length);
+    calculateTime();
 
     // q.unshift(cred);
     q.push(cred);
@@ -103,6 +104,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('delete-user', function(username) {
     removeUser(username);
+    calculateTime();
     socket.emit('deleted', username, q, subtractFromHighestTime(username));
   });
 
@@ -201,38 +203,62 @@ function pulltoCutter() {
   return [userid, lc_num]
 }
 
-function getLowestTime(){
-  if (laser_cutter1_time <= laser_cutter2_time){
-    return laser_cutter1_time;
-  }
-  else{
-    return laser_cutter2_time;
-  }
-};
-
-function addToLowestTime(user_time){
-  if (laser_cutter1_time <= laser_cutter2_time){
-    laser_cutter1_time += user_time;
-  }
-  else{
-    laser_cutter2_time += user_time;
-  }
-};
-
-function subtractFromHighestTime(username){
-  for (i = 0; i < q.length; i++) {
-    var entry = q[i];
-    if (entry['username'] == username) {
-      var user_time = entry[i].cut_length;
+function calculateTime() {
+  lasercutter_1 = 0;
+  lasercutter_2 = 0;
+  for var i = 0; i < q.length; i++ {
+    if (i == 0){
+      lasercutter_1 += q[i].cutLength;
+      q[i].time_remaining = lasercutter_1;
+    } else if (i == 1) {
+      lasercutter_2 += q[i].cutLength;
+      [i].time_remaining = lasercutter_2;
+    } else {
+      if(lasercutter_1 > lasercutter_2) {
+        lasercutter_2 += q[i].cutLength;
+        [i].time_remaining = lasercutter_2;
+      }else{
+        lasercutter_1 += q[i].cutLength;
+        q[i].time_remaining = lasercutter_1;
+      }
     }
-  }
 
-  if (laser_cutter1_time >= laser_cutter2_time){
-    laser_cutter1_time -= user_time;
-  }
-  else{
-    laser_cutter2_time -= user_time;
-  }
 
-  return entry[i].cut_length;
-};
+  }
+}
+
+// function getLowestTime(){
+//   if (laser_cutter1_time <= laser_cutter2_time){
+//     return laser_cutter1_time;
+//   }
+//   else{
+//     return laser_cutter2_time;
+//   }
+// };
+//
+// function addToLowestTime(user_time){
+//   if (laser_cutter1_time <= laser_cutter2_time){
+//     laser_cutter1_time += user_time;
+//   }
+//   else{
+//     laser_cutter2_time += user_time;
+//   }
+// };
+//
+// function subtractFromHighestTime(username){
+//   for (i = 0; i < q.length; i++) {
+//     var entry = q[i];
+//     if (entry['username'] == username) {
+//       var user_time = entry[i].cut_length;
+//     }
+//   }
+//
+//   if (laser_cutter1_time >= laser_cutter2_time){
+//     laser_cutter1_time -= user_time;
+//   }
+//   else{
+//     laser_cutter2_time -= user_time;
+//   }
+//
+//   return entry[i].cut_length;
+// };

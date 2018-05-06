@@ -250,7 +250,7 @@ $(document).ready(() => {
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
     signOut();
-    // socket.emit('delete-user', username);
+    socket.emit('delete-user', username);
 
   });
 
