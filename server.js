@@ -93,6 +93,7 @@ io.sockets.on('connection', function(socket) {
 
     q.push(cred);
 
+    tickCurrentUsers();
     if(q.length === 3) { // WARNING queue implementation
       ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
     }
@@ -200,7 +201,7 @@ function removeUser(email) {
       return
     }
   }
-  console.log("Invalid removeUser request with ID: " + email)
+  console.log("Invalid removeUser request with ID: " + email);
 }
 
 /*
@@ -302,7 +303,7 @@ function calculateTime() {
     }
   }
 
-  socket.emit("handshake",q);
+  io.sockets.emit("handshake",q);
 
   // for (var i = 0; i < q.length; i++){
   //   if (i === 0){
@@ -368,7 +369,5 @@ function tickCurrentUsers() {
   //   } else {
   //     pulltoCutter();
   //   }
-
-
-  }
+  // }
 }
