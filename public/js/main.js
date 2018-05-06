@@ -225,14 +225,8 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-<<<<<<< HEAD
     socket.emit('delete-user', username);
     signOut();
-=======
-
-    console.log("calls delete");
-    socket.emit('delete-user', userEmail);
->>>>>>> f8002344e461009c04e6d8ca9f1ca6b5a5de3849
 
   });
 

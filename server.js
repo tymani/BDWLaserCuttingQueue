@@ -219,17 +219,17 @@ function calculateTime() {
   lasercutter_2 = 0;
   for (var i = 0; i < q.length; i++ ){
     if (i === 0){
-      lasercutter_1 += q[i].cutLength;
+      lasercutter_1 += q[i].cut_length;
       q[i].time_remaining = lasercutter_1;
     } else if (i === 1) {
-      lasercutter_2 += q[i].cutLength;
+      lasercutter_2 += q[i].cut_length;
       [i].time_remaining = lasercutter_2;
     } else {
       if(lasercutter_1 > lasercutter_2) {
-        lasercutter_2 += q[i].cutLength;
+        lasercutter_2 += q[i].cut_length;
         [i].time_remaining = lasercutter_2;
       }else{
-        lasercutter_1 += q[i].cutLength;
+        lasercutter_1 += q[i].cut_length;
         q[i].time_remaining = lasercutter_1;
       }
     }
