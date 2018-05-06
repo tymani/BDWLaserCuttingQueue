@@ -18,7 +18,6 @@ app.use("/", express.static(__dirname));
 
 var conn = anyDB.createConnection('sqlite3://db/users.db');
 
-// var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var q = [null, null];
@@ -46,7 +45,6 @@ function sendEmail(userEmail){
           to: userEmail, // list of receivers
           subject: 'You\'re Next in Line for the Laser Cutter!', // Subject line
           text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop.', // plain text body
-          // html: '<img src="__dirname + public/img/bdw-logo.png">' // html body
       };
 
       // send mail with defined transport object
@@ -66,10 +64,8 @@ function sendEmail(userEmail){
 
 io.sockets.on('connection', function(socket) {
 
-  // console.log("connection, 67");
 
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
-  //^ can we send the userid here instead???
 
   socket.on("signin", function() {
     calculateTime();
@@ -89,7 +85,6 @@ io.sockets.on('connection', function(socket) {
       'email' : email
     };
 
-    // q.unshift(cred);
     q.push(cred);
 
     if(q.length === 1) {
@@ -99,6 +94,8 @@ io.sockets.on('connection', function(socket) {
     calculateTime();
 
     io.sockets.emit('joined', q);
+
+    pulltoCutter();
   });
 
   socket.on('delete-user', function(userEmail) {

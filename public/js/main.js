@@ -1,5 +1,4 @@
 //global variables
-
 var userId = -1;
 var username;
 var userEmail;
@@ -11,11 +10,6 @@ function onSignIn(googleUser) {
   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
   username = profile.getName();
   userEmail = profile.getEmail();
-  // console.log('Name: ' + profile.getName());
-  // console.log('Image URL: ' + profile.getImageUrl());
-  // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-  // document.getElementById('user').innerHTML = profile.getEmail();
-  // document.getElementByID('user').innerHTML = profile.getEmail();
   var signInButton = document.getElementById("sign-in");
   signInButton.classList.add("hidden");
   var signOutButton = document.getElementsByClassName("sign-out-container")[0];
@@ -30,8 +24,6 @@ function onSignIn(googleUser) {
 $(document).ready(() => {
 
 
-
-  // socket.emit("test");
 
   /*******************************************************************/
   /************************** Socket Functions  **********************/
@@ -74,7 +66,6 @@ $(document).ready(() => {
       }
 
       updateTimer(timeRemaining);
-
       //print rest of list
       //mark our current user in the list
       renderQ(queue);
@@ -98,9 +89,6 @@ $(document).ready(() => {
       updateTimer(timeRemaining);
 
       renderQ(queue);
-      if (username == getMeta('username')) {
-          //TODO This client has been removed from queue.
-      }
     });
 
     //on reconnection after disconnection server need to send updated queue
@@ -117,14 +105,6 @@ $(document).ready(() => {
   /*******************************************************************/
 
   /* Header Scroll Motion Interaction */
-  // var headerHeight = $("header").height();
-  // $(document).on("scroll",function() {
-  //   if ($(document).scrollTop() > headerHeight) {
-  //     $("header").addClass("header-scroll");
-  //   } else {
-  //     $("header").removeClass("header-scroll");
-  //   }
-  // });
 
   /* ---------------------------------------------------*/
 
@@ -231,23 +211,8 @@ $(document).ready(() => {
 
       //delete join queue button
       $(".join-queue-form").addClass("hidden");
-      // while ($(".join-queue-form-container")[0].hasChildNodes()) {
-      //   $(".join-queue-form-container")[0].removeChild($(".join-queue-form-container")[0].lastChild);
-      // }
-
-
-      // while ($(".header-buttons-container")[0].hasChildNodes()) {
-      //   $(".header-buttons-container")[0].removeChild($(".header-buttons-container")[0].lastChild);
-      // }
-
-      //delete form
-      // while ($(".form-page")[0].hasChildNodes()) {
-      //   $(".form-page")[0].removeChild($(".form-page")[0].lastChild);
-      // }
 
       //send info to server
-      // socket.emit("test");
-      // socket.emit("join", " ", " ", " ", " ");
       sendNewQueueUser(username, selectedTime, null, userEmail);
 
     }
@@ -259,11 +224,15 @@ $(document).ready(() => {
   /* Sign Out Interaction */
 
   $("#sign-out").click(function() {
-    signOut();
     $(".join-queue-form").removeClass("hidden");
+<<<<<<< HEAD
+    socket.emit('delete-user', username);
+    signOut();
+=======
 
     console.log("calls delete");
     socket.emit('delete-user', userEmail);
+>>>>>>> f8002344e461009c04e6d8ca9f1ca6b5a5de3849
 
   });
 
@@ -273,7 +242,7 @@ $(document).ready(() => {
     auth2.signOut().then(function () {
     console.log('User signed out.');
     });
-    // document.getElementById('user').innerHTML = " ";
+
     var signInButton = document.getElementById("sign-in");
     signInButton.classList.remove("hidden");
     var signOutButton = document.getElementsByClassName("sign-out-container")[0];
@@ -295,12 +264,10 @@ $(document).ready(() => {
 
   /* Webpage Interaction Util Functions */
 
-  //TODO This is a function that will take care of rendering the new state of the queue
   function renderQ(queue) {
     var timeRemaining = 0;
     var thisname = getMeta('username');
 
-//TODO: empty queuetable before rednering queue
       while ($(".queue-table")[0].hasChildNodes()) {
         $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
       }
@@ -317,10 +284,6 @@ $(document).ready(() => {
                 socket.emit("up-next", userEmail);
               }
             }
-
-            // else if(i === 2 || i ===3){
-            //   socket.emit("up-next", userEmail);
-            // }
 
             addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
           } else {
@@ -351,25 +314,9 @@ $(document).ready(() => {
                             "<td class='queue-elem'>"+cutLength+"</td>"+
                             "<td class='queue-elem'></td>"+
                         "</tr>";
-    }else if(flag == "currently-using") {
-      //tbd
     }
 
     $(".queue-table").append(newQueueElem);
-  }
-
-  function validateEmail(email) {
-    //placeholder Function
-    return (email != "")
-
-
-  }
-
-  function getMeta(name) {
-    var tag = document.querySelector('meta[name=' + name + ']');
-    if (tag != null)
-      return tag.content;
-    return '';
   }
 
   function formDisappear() {
@@ -379,25 +326,6 @@ $(document).ready(() => {
   }
 
 /* --------------------------------------------------- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -531,14 +459,6 @@ function stopTickingTimer() {
 function printEmptyQueuePage() {
   console.log("TBD");
 }
-
-
-// function startCountdown(cutLength) {
-//   //print cutLength
-//   printTimer(0,cutLength);
-//
-//
-// }
 
 
 //make timeremaingin function
