@@ -18,13 +18,14 @@ app.use("/", express.static(__dirname));
 
 var conn = anyDB.createConnection('sqlite3://db/users.db');
 
-// var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var q = [null, null];
 var ids = new Map();
 
 var hr = (new Date()).getHours();
+
+var ticking;
 
 function sendEmail(userEmail){
 
@@ -44,7 +45,6 @@ function sendEmail(userEmail){
           to: userEmail, // list of receivers
           subject: 'You\'re Next in Line for the Laser Cutter!', // Subject line
           text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop.', // plain text body
-          // html: '<img src="__dirname + public/img/bdw-logo.png">' // html body
       };
 
       // send mail with defined transport object
@@ -64,12 +64,11 @@ function sendEmail(userEmail){
 
 io.sockets.on('connection', function(socket) {
 
-  // console.log("connection, 67");
 
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
-  //^ can we send the userid here instead???
 
   socket.on("signin", function() {
+    calculateTime();
     socket.emit('handshake', q);
   });
 
@@ -82,11 +81,17 @@ io.sockets.on('connection', function(socket) {
       'id' : socket.id,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
+      "time_remaining": null,
       'email' : email
     };
 
-    // q.unshift(cred);
     q.push(cred);
+
+    if(q.length === 1) {
+      ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
+    }
+
+    calculateTime();
 
     io.sockets.emit('joined', q);
 
@@ -95,8 +100,18 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('delete-user', function(userEmail) {
     console.log("should delete");
-    removeUser(userEmail);
-    socket.emit('deleted', ids.get(userEmail), q);
+    if(q.length === 0) {
+      if(ticking != null) {
+        clearInterval(ticking);
+      }
+  }
+
+  removeUser(userEmail);
+  socket.emit('deleted', ids.get(userEmail), q);
+
+
+
+
   });
 
   socket.on('up-next', function(userEmail){
@@ -202,11 +217,11 @@ function pulltoCutter() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for (var i = 0; i < q.length; i++) {
-    if (i == 0){
+  for var i = 0; i < q.length; i++ {
+    if (i === 0){
       lasercutter_1 += q[i].cutLength;
       q[i].time_remaining = lasercutter_1;
-    } else if (i == 1) {
+    } else if (i === 1) {
       lasercutter_2 += q[i].cutLength;
       [i].time_remaining = lasercutter_2;
     } else {
@@ -217,6 +232,34 @@ function calculateTime() {
         lasercutter_1 += q[i].cutLength;
         q[i].time_remaining = lasercutter_1;
       }
+    }
+  }
+}
+
+function tickCurrentUsers() {
+  if (q.length === 1) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
+  } else if (q.length >= 2) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
+
+    if(q[1].time_remaining >= 5){
+      q[1].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
     }
 
 
