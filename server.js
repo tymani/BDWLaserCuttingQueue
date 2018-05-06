@@ -140,9 +140,18 @@ app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
 });
 
-// Function Declarations
+/*
+  Function that removes user from the Queue.
+  Splice the person out emits 'deleted' to all users.
+  It DOES NOT remove user currently cutting. You'll have to refer to
+  finishCutting() to do that.
+
+  Parameters: User's email address
+
+  Return: none.
+*/
 function removeUser(email) {
-  for (i = 0; i < q.length; i++) {
+  for (i = 2; i < q.length; i++) {
     var entry = q[i];
     if (entry['email'] == email) {
       q.splice(i, 1);
@@ -152,6 +161,17 @@ function removeUser(email) {
     }
   }
   console.log("Invalid removeUser request with ID: " + userid)
+}
+
+/*
+  Function that removes user from the lasercutter
+*/
+function finishCutting(c_num) {
+  var entry = q[c_num]
+  q[c_num] = null;
+  ids.delete(entry['email'])
+  pulltoCutter();
+  calculateTime();
 }
 
 
