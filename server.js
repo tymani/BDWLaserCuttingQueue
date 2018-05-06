@@ -27,6 +27,8 @@ var ids = new Object();
 
 var hr = (new Date()).getHours();
 
+var ticking;
+
 function sendEmail(userEmail){
 
   nodemailer.createTestAccount((err, account) => {
@@ -71,6 +73,7 @@ io.sockets.on('connection', function(socket) {
   //^ can we send the userid here instead???
 
   socket.on("signin", function() {
+    calculateTime();
     socket.emit('handshake', q);
   });
 
@@ -83,11 +86,18 @@ io.sockets.on('connection', function(socket) {
       'id' : socket.id,
       'cut_length' : length, // needed to change this bc .length is already a function
       'phone_number': pnum,
+      "time_remaining": null,
       'email' : email
     };
 
     // q.unshift(cred);
     q.push(cred);
+
+    if(q.length === 1) {
+      ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
+    }
+
+    calculateTime();
 
     io.sockets.emit('joined', q);
   });
@@ -95,6 +105,12 @@ io.sockets.on('connection', function(socket) {
   socket.on('delete-user', function(username) {
     console.log("should delete");
     removeUser(username);
+
+    if(q.length === 0) {
+      if(ticking != null) {
+        clearInterval(ticking);
+      }
+    }
     socket.emit('deleted', username, q);
   });
 
@@ -155,11 +171,11 @@ function generateID() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for (var i = 0; i < q.length; i++) {
-    if (i == 0){
+  for var i = 0; i < q.length; i++ {
+    if (i === 0){
       lasercutter_1 += q[i].cutLength;
       q[i].time_remaining = lasercutter_1;
-    } else if (i == 1) {
+    } else if (i === 1) {
       lasercutter_2 += q[i].cutLength;
       [i].time_remaining = lasercutter_2;
     } else {
@@ -170,6 +186,34 @@ function calculateTime() {
         lasercutter_1 += q[i].cutLength;
         q[i].time_remaining = lasercutter_1;
       }
+    }
+  }
+}
+
+function tickCurrentUsers() {
+  if (q.length === 1) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
+  } else if (q.length >= 2) {
+    if(q[0].time_remaining >= 5){
+      q[0].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
+    }
+
+    if(q[1].time_remaining >= 5){
+      q[1].time_remaining -= 5;
+      calculateTime();
+      socket.emit("handshake",q);
+    } else {
+      pulltoCutter();
     }
 
 
