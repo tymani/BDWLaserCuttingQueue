@@ -20,7 +20,7 @@ function onSignIn(googleUser) {
   joinQueueButton.classList.remove("hidden");
   console.log("SIGNIN");
   //becuase race conditions between socket adnd signin to mark our curr user correctly
-  socket.emit("signin");
+  socket.emit("signin",username, userEmail);
 }
 
 $(document).ready(() => {
