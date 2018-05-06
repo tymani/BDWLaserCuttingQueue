@@ -103,19 +103,18 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('delete-user', function(userEmail) {
     console.log("should delete");
-<<<<<<< HEAD
-    removeUser(username);
-
     if(q.length === 0) {
       if(ticking != null) {
         clearInterval(ticking);
       }
-    }
-    socket.emit('deleted', username, q);
-=======
-    removeUser(userEmail);
-    socket.emit('deleted', ids.get(userEmail), q);
->>>>>>> f8002344e461009c04e6d8ca9f1ca6b5a5de3849
+  }
+
+  removeUser(userEmail);
+  socket.emit('deleted', ids.get(userEmail), q);
+
+
+
+
   });
 
   socket.on('up-next', function(userEmail){
