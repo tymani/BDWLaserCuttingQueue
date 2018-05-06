@@ -260,6 +260,8 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     signOut();
+    $(".join-queue-form").removeClass("hidden");
+
     console.log("calls delete");
     socket.emit('delete-user', username);
 
