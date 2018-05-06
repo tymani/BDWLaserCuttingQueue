@@ -20,7 +20,8 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 var io = require('socket.io').listen(server);
 
-var q = [null, null];
+var q = [];
+var ls_1, ls_2;
 var ids = new Map();
 
 var hr = (new Date()).getHours();
@@ -151,7 +152,7 @@ app.get('*', function(request, response){
   Return: none.
 */
 function removeUser(email) {
-  for (i = 2; i < q.length; i++) {
+  for (i = 0; i < q.length; i++) {
     var entry = q[i];
     if (entry['email'] == email) {
       q.splice(i, 1);
@@ -160,16 +161,24 @@ function removeUser(email) {
       return
     }
   }
-  console.log("Invalid removeUser request with ID: " + userid)
+  console.log("Invalid removeUser request with ID: " + email)
 }
 
 /*
   Function that removes user from the lasercutter
 */
 function finishCutting(c_num) {
-  var entry = q[c_num]
-  q[c_num] = null;
-  ids.delete(entry['email'])
+  var user;
+  if c_num == 1 {
+    user = ls_1;
+    ls_1 = null;
+  } else if c_num == 2 {
+    user = ls_2;
+    ls_2 = null;
+  } else {
+    console.log("lasercutter number not valid")
+  }
+  ids.delete(user['email'])
   pulltoCutter();
   calculateTime();
 }
@@ -202,34 +211,36 @@ function generateID() {
   Return type: Javascript Array, [<userid>, <Lasercutter Number>]
 */
 function pulltoCutter() {
-  var lc_num;
-  if (q[0] == null) {
-    lc_num = 0;
+
+  if (q.length < 1) {
+    console.log("No person on the queue to pull")
+    return null;
   }
-  else if (q[1] == null) {
+  var next_person = q[0];
+  var user_em = next_person['email'];
+
+  var lc_num = null;
+  if (ls_1 == null) {
     lc_num = 1;
+    ls_1 = next_person;
+  }
+  else if (ls_2 == null) {
+    lc_num = 2;
+    ls_2 = next_person;
   } else {
     console.log("Lasercutters are all occupied")
     return null;
   }
 
-  if (q.length < 3) {
-    console.log("Lasercutter is empty, but no person on the queue to pull")
-    return null;
-  }
-
-  var next_person = q[2];
-  var user_em = next_person['email'];
-  q[lc_num] = next_person;
-  q.splice(2,1);
+  q.splice(0,1);
 
   io.sockets.emit('handshake', q) // Send the updated queue.
 
-  setTimeout( function(em) {
-    removeUser(em);
+  setTimeout( function(n) {
+    finishCutting(n);
     calculateTime();
     pulltoCutter();
-  }, next_person['cut_length']*60*1000, user_em)
+  }, next_person['cut_length']*60*1000, lc_num)
 
   return [user_em, lc_num]
 }
