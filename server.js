@@ -20,8 +20,8 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 var io = require('socket.io').listen(server);
 
-var q = [];
-var ls_1, ls_2;
+var q = [null, null]; // WARNING: imp
+//var ls_1, ls_2;
 var ids = new Map();
 
 var hr = (new Date()).getHours();
@@ -93,20 +93,18 @@ io.sockets.on('connection', function(socket) {
 
     q.push(cred);
 
-    if(q.length === 1) {
+    if(q.length === 3) { // WARNING queue implementation
       ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
     }
 
     calculateTime();
 
     io.sockets.emit('joined', q);
-
-    pulltoCutter();
   });
 
   socket.on('delete-user', function(userEmail) {
     console.log("should delete");
-    if(q.length === 0) {
+    if(q.length === 2) { // WARNING
       if(ticking != null) {
         clearInterval(ticking);
       }
@@ -193,7 +191,7 @@ app.get('*', function(request, response){
 
 // Function Declarations
 function removeUser(email) {
-  for (i = 0; i < q.length; i++) {
+  for (i = 2; i < q.length; i++) { // WARNING
     var entry = q[i];
     if (entry['email'] == email) {
       q.splice(i, 1);
@@ -210,12 +208,12 @@ function removeUser(email) {
 */
 function finishCutting(c_num) {
   var user;
-  if( c_num == 1 ){
-    user = ls_1;
-    ls_1 = null;
-  } else if (c_num == 2 ){
-    user = ls_2;
-    ls_2 = null;
+  if( c_num == 0 ){
+    user = q[0];
+    q[0] = null;
+  } else if (c_num == 1 ){
+    user = q[1];
+    q[1] = null;
   } else {
     console.log("lasercutter number not valid")
   }
@@ -253,35 +251,32 @@ function generateID() {
 */
 function pulltoCutter() {
 
-  if (q.length < 1) {
+  if (q.length < 3) {
     console.log("No person on the queue to pull")
     return null;
   }
-  var next_person = q[0];
+  var next_person = q[2];
   var user_em = next_person['email'];
+  next_person.time_remaining = next_person['cut_length'];
 
   var lc_num = null;
-  if (ls_1 == null) {
-    lc_num = 1;
-    ls_1 = next_person;
+  if (q[0] == null) {
+    lc_num = 0;
+    q[0] = next_person;
   }
-  else if (ls_2 == null) {
-    lc_num = 2;
-    ls_2 = next_person;
+  else if (q[1] == null) {
+    lc_num = 1;
+    q[1] = next_person;
   } else {
     console.log("Lasercutters are all occupied")
     return null;
   }
 
-  q.splice(0,1);
+  q.splice(2,1);
 
   io.sockets.emit('handshake', q) // Send the updated queue.
 
-  setTimeout( function(n) {
-    finishCutting(n);
-    calculateTime();
-    pulltoCutter();
-  }, next_person['cut_length']*60*1000, lc_num)
+  setTimeout( finishCutting(n), next_person['cut_length']*60*1000, lc_num)
 
   return [user_em, lc_num]
 }
@@ -289,54 +284,90 @@ function pulltoCutter() {
 function calculateTime() {
   lasercutter_1 = 0;
   lasercutter_2 = 0;
-  for (var i = 0; i < q.length; i++){
-    if (i === 0){
-      lasercutter_1 += q[i].cut_length;
-      ls_1.push(q[i]);
-      q[i].time_remaining = lasercutter_1;
-    } else if (i === 1) {
-      lasercutter_2 += q[i].cut_length;
-      ls_2.push(q[i]);
+
+  if (q[0] != null) {
+    lasercutter_1 += q[0].time_remaining;
+  }
+  if (q[1] != null) {
+    lasercutter_2 += q[1].time_remaining;
+  }
+
+  for (var i = 2; i < q.length; i++) {
+    if (lasercutter_1 > lasercutter_2) {
       q[i].time_remaining = lasercutter_2;
+      lasercutter_2 += q[i]['cut_length'];
     } else {
-      if(lasercutter_1 > lasercutter_2) {
-        lasercutter_2 += q[i].cut_length;
-        ls_2.push(q[i]);
-        q[i].time_remaining = lasercutter_2;
-      }else{
-        lasercutter_1 += q[i].cut_length;
-        ls_1.push(q[i]);
-        q[i].time_remaining = lasercutter_1;
-      }
+      q[i].time_remaining = lasercutter_1;
+      lasercutter_1 += q[i]['cut_length'];
     }
   }
+
+  socket.emit("handshake",q);
+
+  // for (var i = 0; i < q.length; i++){
+  //   if (i === 0){
+  //     lasercutter_1 += q[i].cut_length;
+  //     ls_1.push(q[i]);
+  //     q[i].time_remaining = lasercutter_1;
+  //   } else if (i === 1) {
+  //     lasercutter_2 += q[i].cut_length;
+  //     ls_2.push(q[i]);
+  //     q[i].time_remaining = lasercutter_2;
+  //   } else {
+  //     if(lasercutter_1 > lasercutter_2) {
+  //       lasercutter_2 += q[i].cut_length;
+  //       ls_2.push(q[i]);
+  //       q[i].time_remaining = lasercutter_2;
+  //     }else{
+  //       lasercutter_1 += q[i].cut_length;
+  //       ls_1.push(q[i]);
+  //       q[i].time_remaining = lasercutter_1;
+  //     }
+  //   }
+  // }
 }
 
 function tickCurrentUsers() {
-  if (q.length === 1) {
-    if(q[0].time_remaining >= 5){
-      q[0].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
-      pulltoCutter();
-    }
-  } else if (q.length >= 2) {
-    if(q[0].time_remaining >= 5){
-      q[0].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
-      pulltoCutter();
-    }
+  // Check first two entries - reserved for cutters
 
-    if(q[1].time_remaining >= 5){
-      q[1].time_remaining -= 5;
-      calculateTime();
-      socket.emit("handshake",q);
-    } else {
+  for (var i = 0; i < 2; i++) {
+    if (q[i] == null) {
       pulltoCutter();
+      calculateTime();
+    } else{
+      if(q[i].time_remaining >= 5){
+        q[i].time_remaining -= 5;
+        calculateTime();
+      } else {
+        finishCutting(i);
+      }
     }
+  }
+
+  // if (q.length === 2) {
+  //   if(q[0].time_remaining >= 5){
+  //     q[0].time_remaining -= 5;
+  //     calculateTime();
+  //     socket.emit("handshake",q);
+  //   } else {
+  //     pulltoCutter();
+  //   }
+  // } else if (q.length >= 2) {
+  //   if(q[0].time_remaining >= 5){
+  //     q[0].time_remaining -= 5;
+  //     calculateTime();
+  //     socket.emit("handshake",q);
+  //   } else {
+  //     pulltoCutter();
+  //   }
+  //
+  //   if(q[1].time_remaining >= 5){
+  //     q[1].time_remaining -= 5;
+  //     calculateTime();
+  //     socket.emit("handshake",q);
+  //   } else {
+  //     pulltoCutter();
+  //   }
 
 
   }
