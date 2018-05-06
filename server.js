@@ -65,6 +65,11 @@ function sendEmail(userEmail){
 
 io.sockets.on('connection', function(socket) {
 
+  if(!isItOpen()){
+    socket.emit('closed');
+  }
+  else{
+
 
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
 
@@ -118,8 +123,53 @@ io.sockets.on('connection', function(socket) {
   socket.on('up-next', function(userEmail){
     sendEmail(userEmail);
   });
-
+}
 });
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function getTime(){
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+
+  m = checkTime(m);
+  s = checkTime(s);
+  var time = h + ":" + m + ":" + s;
+  return time;
+}
+
+function isItOpen(){
+  //find out what day of the week it is
+  var d = new Date();
+  var day = d.getDay();
+  var time = getTime();
+  var open = "14:00:00";//2pm 14:00:00
+  var close = "23:59:59";//midnight
+  var Fridayclose = "20:00:00";//8pm
+  if(day==5){//Friday hours
+    if(time>=open && time<=Fridayclose){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  else{//the rest of the hours
+    if(time>=open && time<=close){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+};
 
 app.get('/', function(request, response){
     console.log('- Request received:', request.method, request.url);
@@ -160,10 +210,10 @@ function removeUser(email) {
 */
 function finishCutting(c_num) {
   var user;
-  if c_num == 1 {
+  if( c_num == 1 ){
     user = ls_1;
     ls_1 = null;
-  } else if c_num == 2 {
+  } else if (c_num == 2 ){
     user = ls_2;
     ls_2 = null;
   } else {

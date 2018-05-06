@@ -46,6 +46,11 @@ $(document).ready(() => {
       renderQ(queue);
     });
 
+    socket.on('closed', function(){
+      $('.header-buttons-container').html("");
+      $('.body-content').html('<div id="closed"><p>Come back when the BDW is open to join the lasercutter queue.</p> <a href="https://www.brown.edu/research/projects/design-workshop/calendar">BDW Calendar</a></div>');
+    });
+
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
