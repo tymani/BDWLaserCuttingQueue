@@ -153,7 +153,7 @@ $(document).ready(() => {
     console.log("delete");
     $(".join-queue-form").removeClass("hidden");
     $(".youre-up-title").addClass("hidden");
-    socket.emit('delete-user', username);
+    socket.emit('delete-user', userEmail);
   });
 
 
@@ -261,7 +261,7 @@ $(document).ready(() => {
   $("#sign-out").click(function() {
     signOut();
     console.log("calls delete");
-    socket.emit('delete-user', username);
+    socket.emit('delete-user', userEmail);
 
   });
 
