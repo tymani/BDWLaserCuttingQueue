@@ -96,6 +96,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
 
+    if (ids.has(email)) return;
     ids.set(email, username);
 
     var cred = {
@@ -198,11 +199,14 @@ app.get('*', function(request, response){
 
 // Function Declarations
 function removeUser(email) {
-  for (i = 2; i < q.length; i++) { // WARNING
+  for (i = 0; i < q.length; i++) { // WARNING
     var entry = q[i];
     if (entry['email'] == email) {
-      q.splice(i, 1);
-      ids.delete(email);
+      if (i == 1 || i == 2) finishCutting(i);
+      else {
+        q.splice(i, 1);
+        ids.delete(email);
+      }
       io.sockets.emit('deleted', entry['username'], q);
       return;
     }
