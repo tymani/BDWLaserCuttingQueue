@@ -16,8 +16,6 @@ server.listen(8080, function () {
 
 app.use("/", express.static(__dirname));
 
-// var conn = anyDB.createConnection('sqlite3://db/users.db');
-
 var io = require('socket.io').listen(server);
 
 //Global variables for the BDW open hours in hh:mm:ss format
@@ -25,7 +23,6 @@ var open = "14:00:00";//2pm 14:00:00
 var close = "23:59:59";//midnight
 
 var q = [null, null]; // WARNING: imp
-//var ls_1, ls_2;
 var ids = new Map();
 
 var hr = (new Date()).getHours();
@@ -103,7 +100,7 @@ io.sockets.on('connection', function(socket) {
     var cred = {
       'username': username,
       'id' : socket.id,
-      'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
+      'cut_length' : parseInt(length, 10),
       'phone_number': pnum,
       "time_remaining": parseInt(length, 10),
       'email' : email,
@@ -123,9 +120,7 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('delete-user', function(userEmail) {
-
     removeUser(userEmail);
-  // socket.emit('deleted', ids.get(userEmail), q);
   });
 
 }
@@ -165,7 +160,8 @@ function isItOpen(){
       return false;
     }
   }
-  else{//the rest of the hours
+  else{
+    //the rest of the hours
     if(time>=open && time<=close){
       return true;
     }
@@ -179,17 +175,6 @@ app.get('/', function(request, response){
     console.log('- Request received:', request.method, request.url);
     response.sendFile(path.join(__dirname + '/index.html'));
 });
-
-// Function that handles user signup.
-// Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
-// Inserts the credentials to server database and notifies the user if failed.
-// app.post('/userJoin', function(req, res) {
-//   var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
-//   conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
-//     if (err) res.status(500).render("Something went wrong. Try again");
-//     else res.render('index.html', {form:true});
-//   });
-// });
 
 app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
@@ -304,28 +289,6 @@ function calculateTime() {
   }
 
   io.sockets.emit("handshake",q);
-
-  // for (var i = 0; i < q.length; i++){
-  //   if (i === 0){
-  //     lasercutter_1 += q[i].cut_length;
-  //     ls_1.push(q[i]);
-  //     q[i].time_remaining = lasercutter_1;
-  //   } else if (i === 1) {
-  //     lasercutter_2 += q[i].cut_length;
-  //     ls_2.push(q[i]);
-  //     q[i].time_remaining = lasercutter_2;
-  //   } else {
-  //     if(lasercutter_1 > lasercutter_2) {
-  //       lasercutter_2 += q[i].cut_length;
-  //       ls_2.push(q[i]);
-  //       q[i].time_remaining = lasercutter_2;
-  //     }else{
-  //       lasercutter_1 += q[i].cut_length;
-  //       ls_1.push(q[i]);
-  //       q[i].time_remaining = lasercutter_1;
-  //     }
-  //   }
-  // }
 }
 
 function tickCurrentUsers() {
@@ -347,30 +310,4 @@ function tickCurrentUsers() {
       }
     }
   }
-
-  // if (q.length === 2) {
-  //   if(q[0].time_remaining >= 5){
-  //     q[0].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  // } else if (q.length >= 2) {
-  //   if(q[0].time_remaining >= 5){
-  //     q[0].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  //
-  //   if(q[1].time_remaining >= 5){
-  //     q[1].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  // }
 }
