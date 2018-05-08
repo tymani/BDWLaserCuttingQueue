@@ -143,6 +143,7 @@ $(document).ready(() => {
     console.log("delete");
     $(".join-queue-form").removeClass("hidden");
     $(".youre-up-title").addClass("hidden");
+    $(".time-background-block").css("background-color","#1c75bc");
     socket.emit('delete-user', userEmail);
   });
 
@@ -271,6 +272,7 @@ $(document).ready(() => {
   function renderQ(queue) {
     var timeRemaining = 0;
     $(".youre-up-title").addClass("hidden");
+    $(".time-background-block").css("background-color","#1c75bc");
 
       while ($(".queue-table")[0].hasChildNodes()) {
         $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
@@ -284,6 +286,7 @@ $(document).ready(() => {
               if(i === 0||i === 1) {
                 //add youre up
                 $(".youre-up-title").removeClass("hidden");
+                $(".time-background-block").css("background-color","red");
                 if(should_email === true){
                   socket.emit("up-next", userEmail);
                 }
