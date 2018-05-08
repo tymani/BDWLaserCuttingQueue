@@ -101,7 +101,7 @@ io.sockets.on('connection', function(socket) {
     var cred = {
       'username': username,
       'id' : socket.id,
-      'cut_length' : length, // needed to change this bc .length is already a function
+      'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
       'phone_number': pnum,
       "time_remaining": null,
       'email' : email
@@ -109,9 +109,9 @@ io.sockets.on('connection', function(socket) {
 
     q.push(cred);
 
+    pulltoCutter();
     if(q.length === 3) { // WARNING queue implementation
-      tickCurrentUsers();
-      ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
+      ticking = setInterval(function () {tickCurrentUsers();}, (60000));
     }
 
     calculateTime();
@@ -211,9 +211,9 @@ function removeUser(email) {
     var entry = q[i];
     if (entry['email'] == email) {
       q.splice(i, 1);
-      ids.delete(email)
+      ids.delete(email);
       io.sockets.emit('deleted', entry['username'], q);
-      return
+      return;
     }
   }
   console.log("Invalid removeUser request with ID: " + email);
@@ -233,7 +233,7 @@ function finishCutting(c_num) {
   } else {
     console.log("lasercutter number not valid")
   }
-  ids.delete(user['email'])
+  ids.delete(user['email']);
   pulltoCutter();
   calculateTime();
 }
@@ -354,8 +354,8 @@ function tickCurrentUsers() {
       pulltoCutter();
       calculateTime();
     } else{
-      if(q[i].time_remaining >= 5){
-        q[i].time_remaining -= 5;
+      if(q[i].time_remaining >= 1){
+        q[i].time_remaining -= 1;
         calculateTime();
       } else {
         finishCutting(i);
