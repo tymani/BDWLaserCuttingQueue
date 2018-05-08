@@ -71,7 +71,7 @@ $(document).ready(() => {
           } else {
             break;
           }
-      }
+        }
       }
 
       updateTimer(timeRemaining);
