@@ -32,6 +32,18 @@ var hr = (new Date()).getHours();
 
 var ticking;
 
+// Authentication module.
+var auth = require('http-auth');
+var basic = auth.basic({
+    realm: "IDK.",
+    file: path.join(__dirname + '/users.htpasswd')
+})
+
+// Setup route. for protected
+app.get('/monitor', auth.connect(basic), (req, res) => {
+    res.sendFile(path.join(__dirname + '/monitor.html'));
+});
+
 function sendEmail(userEmail){
 
   nodemailer.createTestAccount((err, account) => {
@@ -73,7 +85,6 @@ io.sockets.on('connection', function(socket) {
     socket.emit('closed');
   }
   else{
-
 
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
 
@@ -154,9 +165,9 @@ function isItOpen(){
   var d = new Date();
   var day = d.getDay();
   var time = getTime();
-  var Fridayclose = "20:00:00";//8pm
+  var friClose = "20:00:00";//8pm
   if(day==5){//Friday hours
-    if(time>=open && time<=Fridayclose){
+    if(time>=open && time<=friClose){
       return true;
     }
     else{

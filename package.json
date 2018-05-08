@@ -28,6 +28,7 @@
     "googleapis": "^27.0.0",
     "hogan.js": "^3.0.2",
     "http": "0.0.0",
+    "http-auth": "^3.2.3",
     "node-mailjet": "^3.2.1",
     "nodemailer": "^4.6.4",
     "save": "^2.3.2",
