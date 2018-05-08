@@ -28,8 +28,8 @@ $(document).ready(() => {
   /*******************************************************************/
 
     // Server emits this on connection to give initial state of the queue
-    socket.on('handshake', function(queue) {
-      var timeRemaining = 0;
+    socket.on('handshake', function(queue, time) {
+      var timeRemaining = time;
 
       for(var i = 0; i < queue.length; i++) {
         if(queue[i] != null){
@@ -42,7 +42,7 @@ $(document).ready(() => {
 
       }
 
-      updateTimer(timeRemaining);
+      updateTimer(time);
       renderQ(queue);
     });
 
@@ -230,7 +230,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    socket.emit('delete-user', userEmail);
+    //socket.emit('delete-user', userEmail);
     signOut();
 
   });
