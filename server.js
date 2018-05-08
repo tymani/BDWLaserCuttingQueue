@@ -26,6 +26,8 @@ var ids = new Map();
 
 var hr = (new Date()).getHours();
 
+var lastTime=0;
+
 // Setting time interval for
 var ticking;
 
@@ -78,17 +80,18 @@ function sendEmail(userEmail, laser_number){
 };
 
 io.sockets.on('connection', function(socket) {
+  calculateTime();
 
   if(!isItOpen()){
     socket.emit('closed');
   }
   else{
 
-  socket.emit('handshake', q); // Sends the newly connected client current state of the queue
+  socket.emit('handshake', q, lastTime); // Sends the newly connected client current state of the queue
 
   socket.on("signin", function() {
     calculateTime();
-    socket.emit('handshake', q);
+    socket.emit('handshake', q, lastTime);
   });
 
   socket.on('join', function(username, length, pnum, email, should_email) { // Fired by client when it joins the queue
@@ -259,7 +262,7 @@ function pulltoCutter() {
   }
 
 
-  io.sockets.emit('handshake', q); // Send the updated queue.
+  io.sockets.emit('handshake', q, lastTime); // Send the updated queue.
 
   return [user_em, lc_num];
 }
@@ -275,6 +278,12 @@ function calculateTime() {
     lasercutter_2 += q[1].time_remaining;
   }
 
+  if(lasercutter_2>lasercutter_1){
+    lastTime=lasercutter_1;
+  }else{
+    lastTime = lasercutter_2;
+  }
+
   for (var i = 2; i < q.length; i++) {
     if (lasercutter_1 > lasercutter_2) {
       q[i].time_remaining = lasercutter_2;
@@ -285,7 +294,13 @@ function calculateTime() {
     }
   }
 
-  io.sockets.emit("handshake",q);
+  if(lasercutter_2>lasercutter_1){
+    lastTime=lasercutter_1;
+  }else{
+    lastTime = lasercutter_2;
+  }
+
+  io.sockets.emit("handshake",q, lastTime);
 }
 
 function tickCurrentUsers() {
