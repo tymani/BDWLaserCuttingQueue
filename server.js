@@ -45,7 +45,7 @@ app.get('/monitor', auth.connect(basic), (req, res) => {
     res.sendFile(path.join(__dirname + '/monitor.html'));
 });
 
-function sendEmail(userEmail){
+function sendEmail(userEmail, laser_number){
 
   nodemailer.createTestAccount((err, account) => {
       // create reusable transporter object using the default SMTP transport
@@ -62,7 +62,8 @@ function sendEmail(userEmail){
           from: '"Brown Design Workshop" <bdwautomation@gmail.com>', // sender address
           to: userEmail, // list of receivers
           subject: 'You\'re Next in Line for the Laser Cutter!', // Subject line
-          text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop.', // plain text body
+          text: 'You are next in line for the BDW laser cutters. Please head over to the design workshop. You will be ' +
+          'laser cutter number ' + laser_number + '.', // plain text body
       };
 
       // send mail with defined transport object
@@ -104,7 +105,7 @@ io.sockets.on('connection', function(socket) {
       'id' : socket.id,
       'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
       'phone_number': pnum,
-      "time_remaining": null,
+      "time_remaining": parseInt(length, 10),
       'email' : email
     };
 
@@ -127,9 +128,9 @@ io.sockets.on('connection', function(socket) {
   // socket.emit('deleted', ids.get(userEmail), q);
   });
 
-  socket.on('up-next', function(userEmail){
-    sendEmail(userEmail);
-  });
+  // socket.on('up-next', function(userEmail){
+  //   sendEmail(userEmail);
+  // });
 }
 });
 
@@ -292,6 +293,8 @@ function pulltoCutter() {
 
   q.splice(2,1);
 
+  sendEmail(user_em, lc_num + 1);
+
   io.sockets.emit('handshake', q); // Send the updated queue.
 
   // No longer needed because ticktimer handles finish cutting automatically
@@ -359,7 +362,7 @@ function tickCurrentUsers() {
       pulltoCutter();
       calculateTime();
     } else{
-      if(q[i].time_remaining >= 1){
+      if(q[i].time_remaining >= 2){
         q[i].time_remaining -= 1;
         calculateTime();
       } else {
