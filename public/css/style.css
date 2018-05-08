@@ -27,6 +27,13 @@ body {
   color: #1c75bc;
 }
 
+#monitor-title{
+  text-align: center;
+  font-size: 30px;
+  font-family: 'Roboto-Regular';
+  color: #1c75bc;
+}
+
 .body-content {
   z-index: -1;
   position: relative;
@@ -545,6 +552,10 @@ display: none;
 }
 
 footer {
+  position:fixed;
+    bottom:0px;
+    left:0px;
+    right:0px;
   width: 100vw;
   display: flex;
   flex-direction: row;
