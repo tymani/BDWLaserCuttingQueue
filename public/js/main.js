@@ -6,7 +6,6 @@ var socket = io.connect();
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
   username = profile.getName();
   userEmail = profile.getEmail();
   var signInButton = document.getElementById("sign-in");
@@ -15,7 +14,6 @@ function onSignIn(googleUser) {
   signOutButton.classList.remove("hidden");
   var joinQueueButton = document.getElementById("join-queue-form");
   joinQueueButton.classList.remove("hidden");
-  console.log("SIGNIN");
   //becuase race conditions between socket adnd signin to mark our curr user correctly
   socket.emit("signin");
 }
@@ -34,7 +32,6 @@ $(document).ready(() => {
 
       for(var i = 0; i < queue.length; i++) {
         if(queue[i] != null){
-          console.log(queue[i]);
           if(queue[i].userEmail != userEmail) {
             timeRemaining = parseInt(queue[i].time_remaining);
           } else {
@@ -56,7 +53,6 @@ $(document).ready(() => {
     // Server emits this whenever new client connects
 
     socket.on("joined", function(queue) {
-      console.log("QUEUE: " + queue);
       //first element in list is current user on laser1
       //second element in list is current user on laser2
 
@@ -134,7 +130,6 @@ $(document).ready(() => {
   });
 
   $('body').on('click', "#delete-queue-button",function () {
-    console.log("delete");
     $(".join-queue-form").removeClass("hidden");
     $(".youre-up-title").addClass("hidden");
     socket.emit('delete-user', userEmail);
@@ -204,7 +199,6 @@ $(document).ready(() => {
 
     if(!validForm) {
       //show necessary false stuff
-      console.log("Please select approx time of cut.");
     } else{
 
       //run notification functions
@@ -237,7 +231,6 @@ $(document).ready(() => {
   function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
-    console.log('User signed out.');
     });
 
     var signInButton = document.getElementById("sign-in");
@@ -350,8 +343,6 @@ function updateTimer(timeRemaining) {
 function changeTimer(newTime) {
   var timer = $(".timer-time")[0];
   //stop old timer
-  //stopTickingTimer();
-  console.log("CHANGE TIMER: NEW TIME: " + newTime);
 
   var minutes = 0;
   var hours = 0;
@@ -381,8 +372,6 @@ function changeTimer(newTime) {
 
 
 function printTimer(hours, minutes) {
-  console.log("HOURS: " + hours);
-  console.log("MINS: " + minutes);
   var timer = $(".timer-time");
   //remove current time
   while (timer[0].hasChildNodes()) {
@@ -445,9 +434,6 @@ function stopTickingTimer() {
   }
 }
 
-function printEmptyQueuePage() {
-  console.log("TBD");
-}
 
 
 //make timeremaingin function

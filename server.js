@@ -171,7 +171,6 @@ function isItOpen(){
 };
 
 app.get('/', function(request, response){
-    console.log('- Request received:', request.method, request.url);
     response.sendFile(path.join(__dirname + '/index.html'));
 });
 
@@ -209,7 +208,7 @@ function finishCutting(c_num) {
     user = q[1];
     q[1] = null;
   } else {
-    console.log("lasercutter number not valid")
+    console.log("Lasercutter number not valid")
   }
   ids.delete(user['email']);
   pulltoCutter();
@@ -228,7 +227,6 @@ function finishCutting(c_num) {
 function pulltoCutter() {
 
   if (q.length < 3) {
-    console.log("No person on the queue to pull")
     if(q[0] == null && q[1] == null) { // WARNING
       if(ticking != null) {
         console.log("Queues and lasercutters are completely empty. Pausing server.")
