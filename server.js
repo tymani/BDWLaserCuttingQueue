@@ -122,7 +122,6 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('delete-user', function(userEmail) {
-    console.log("should delete");
 
     removeUser(userEmail);
   // socket.emit('deleted', ids.get(userEmail), q);
@@ -293,7 +292,7 @@ function pulltoCutter() {
 
   q.splice(2,1);
 
-  sendEmail(user_em, lc_num + 1);
+  // sendEmail(user_em, lc_num + 1);
 
   io.sockets.emit('handshake', q); // Send the updated queue.
 

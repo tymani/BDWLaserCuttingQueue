@@ -552,6 +552,10 @@ display: none;
 }
 
 footer {
+  position:fixed;
+    bottom:0px;
+    left:0px;
+    right:0px;
   width: 100vw;
   display: flex;
   flex-direction: row;
