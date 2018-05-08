@@ -235,7 +235,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    socket.emit('delete-user', userEmail);
+    //socket.emit('delete-user', userEmail);
     signOut();
 
   });
@@ -270,6 +270,7 @@ $(document).ready(() => {
 
   function renderQ(queue) {
     var timeRemaining = 0;
+    $(".youre-up-title").addClass("hidden");
 
       while ($(".queue-table")[0].hasChildNodes()) {
         $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
