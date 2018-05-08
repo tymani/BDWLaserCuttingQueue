@@ -3,7 +3,6 @@ var userId = -1;
 var username;
 var userEmail;
 var socket = io.connect();
-var should_email = false;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -29,20 +28,20 @@ $(document).ready(() => {
 
     // Server emits this on connection to give initial state of the queue
     socket.on('handshake', function(queue) {
-      // var timeRemaining = 0;
-      //
-      // for(var i = 0; i < queue.length; i++) {
-      //   if(queue[i] != null){
-      //     if(queue[i].userEmail != userEmail) {
-      //       timeRemaining = parseInt(queue[i].time_remaining);
-      //     } else {
-      //       break;
-      //     }
-      // }
-      //
-      // }
-      //
-      // updateTimer(timeRemaining);
+      var timeRemaining = 0;
+
+      for(var i = 0; i < queue.length; i++) {
+        if(queue[i] != null){
+          if(queue[i].userEmail != userEmail) {
+            timeRemaining = parseInt(queue[i].time_remaining);
+          } else {
+            break;
+          }
+      }
+
+      }
+
+      updateTimer(timeRemaining);
       renderQ(queue);
     });
 
@@ -100,7 +99,7 @@ $(document).ready(() => {
     //on reconnection after disconnection server need to send updated queue
 
   function sendNewQueueUser(username,length, phone_number, email) {
-    socket.emit("join", username, length, phone_number, email);
+    socket.emit("join", username, length, phone_number, email, $("#email-notification-checkbox input")[0].checked);
   };
 
 
@@ -230,7 +229,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    //socket.emit('delete-user', userEmail);
+    socket.emit('delete-user', userEmail);
     signOut();
 
   });
@@ -254,18 +253,16 @@ $(document).ready(() => {
 
   /* Phone Checkbox Form Interaction */
   //phone number checkbox clicked
-  $("#email-notification-checkbox input").click(function () {
-    should_email = true;
-  });
+  // $("#email-notification-checkbox input").click(function () {
+  //   should_email = true;
+  // });
 
   /* --------------------------------------------------- */
 
   /* Webpage Interaction Util Functions */
 
   function renderQ(queue) {
-    var ls_1 = 0;
-    var ls_2 = 0;
-    var in_queue = false;
+    var timeRemaining = 0;
     $(".youre-up-container").css("display", "none");
     $(".time-background-block").css("background-color","#1c75bc");
 
@@ -275,27 +272,13 @@ $(document).ready(() => {
 
         for(var i = 0; i < queue.length; i++) {
           if(queue[i] != null){
-
-            if (i === 0) {
-              ls_1 += queue[i].time_remaining;
-            } else if (i === 0) {
-              ls_2 += queue[i].time_remaining;
-            } else {
-              ls_1 > ls_2 ? ls_2 += queue[i].cut_length : ls_1 += queue[i].cut_length;
-            }
-
-
             if(queue[i].email === userEmail) {
-              in_queue = true;
               changeTimer(queue[i].time_remaining);
               $(".join-queue-form").addClass("hidden");
               if(i === 0||i === 1) {
                 //add youre up
-                $(".youre-up-container").css("display", "flex");
+                $(".youre-up-container").css("display","flex");
                 $(".time-background-block").css("background-color","red");
-                if(should_email === true){
-                  socket.emit("up-next", userEmail);
-                }
                 addToQueue(i+1, queue[i].username,queue[i].time_remaining,"user");
               } else {
                   addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
@@ -305,34 +288,12 @@ $(document).ready(() => {
               if(i === 0 || i === 1) {
                 addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
               } else {
-                addToQueue(i+1, queue[i].username,queue[i].cut_length,"user ");
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
               }
 
             }
         }
         }
-
-      if (in_queue == false) {
-        changeTimer(Math.min(ls_1, ls_2));
-      }
-
-      // if (timeRemaining == -1) {
-      //   var last = 0;
-      //   var last_2 = 0;
-      //   if (queue[queue.length - 1] != null) {
-      //     last = queue[queue.length - 1].time_remaining;
-      //     if (queue.length - 1 > 1) last += queue[queue.length - 1].cut_length;
-      //   }
-      //   if (queue[queue.length - 2] != null) {
-      //     last_2 = queue[queue.length - 2].time_remaining;
-      //     if (queue.legnth - 2 > 1) last_2 += queue[queue.length - 2].cut_length;
-      //   }
-      //   if (last > last_2) {
-      //     changeTimer(last_2);
-      //   } else {
-      //     changeTimer(last);
-      //   }
-      // }
 
 
 
