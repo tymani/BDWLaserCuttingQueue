@@ -20,6 +20,10 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 var io = require('socket.io').listen(server);
 
+//Global variables for the BDW open hours in hh:mm:ss format
+var open = "14:00:00";//2pm 14:00:00
+var close = "23:59:59";//midnight
+
 var q = [null, null]; // WARNING: imp
 //var ls_1, ls_2;
 var ids = new Map();
@@ -28,6 +32,18 @@ var hr = (new Date()).getHours();
 
 // Setting time interval for
 var ticking;
+
+// Authentication module.
+var auth = require('http-auth');
+var basic = auth.basic({
+    realm: "IDK.",
+    file: path.join(__dirname + '/users.htpasswd')
+})
+
+// Setup route. for protected
+app.get('/monitor', auth.connect(basic), (req, res) => {
+    res.sendFile(path.join(__dirname + '/monitor.html'));
+});
 
 function sendEmail(userEmail){
 
@@ -70,7 +86,6 @@ io.sockets.on('connection', function(socket) {
     socket.emit('closed');
   }
   else{
-
 
   socket.emit('handshake', q); // Sends the newly connected client current state of the queue
 
@@ -139,6 +154,7 @@ function getTime(){
   var m = today.getMinutes();
   var s = today.getSeconds();
 
+  h = checkTime(h);
   m = checkTime(m);
   s = checkTime(s);
   var time = h + ":" + m + ":" + s;
@@ -150,11 +166,9 @@ function isItOpen(){
   var d = new Date();
   var day = d.getDay();
   var time = getTime();
-  var open = "14:00:00";//2pm 14:00:00
-  var close = "23:59:59";//midnight
-  var Fridayclose = "20:00:00";//8pm
+  var friClose = "20:00:00";//8pm
   if(day==5){//Friday hours
-    if(time>=open && time<=Fridayclose){
+    if(time>=open && time<=friClose){
       return true;
     }
     else{

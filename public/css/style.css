@@ -16,6 +16,17 @@ body {
   position: relative;
 }
 
+#closed p{
+  text-align: center;
+  font-size: 30px;
+  font-family: 'Roboto-Regular';
+}
+
+#closed p a{
+  text-decoration: none;
+  color: #1c75bc;
+}
+
 .body-content {
   z-index: -1;
   position: relative;
