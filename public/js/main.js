@@ -28,21 +28,21 @@ $(document).ready(() => {
   /*******************************************************************/
 
     // Server emits this on connection to give initial state of the queue
-    socket.on('handshake', function(queue, time) {
-      var timeRemaining = time;
-
-      for(var i = 0; i < queue.length; i++) {
-        if(queue[i] != null){
-          if(queue[i].userEmail != userEmail) {
-            timeRemaining = parseInt(queue[i].time_remaining);
-          } else {
-            break;
-          }
-      }
-
-      }
-
-      updateTimer(time);
+    socket.on('handshake', function(queue) {
+      // var timeRemaining = 0;
+      //
+      // for(var i = 0; i < queue.length; i++) {
+      //   if(queue[i] != null){
+      //     if(queue[i].userEmail != userEmail) {
+      //       timeRemaining = parseInt(queue[i].time_remaining);
+      //     } else {
+      //       break;
+      //     }
+      // }
+      //
+      // }
+      //
+      // updateTimer(timeRemaining);
       renderQ(queue);
     });
 
@@ -263,7 +263,9 @@ $(document).ready(() => {
   /* Webpage Interaction Util Functions */
 
   function renderQ(queue) {
-    var timeRemaining = 0;
+    var ls_1 = 0;
+    var ls_2 = 0;
+    var in_queue = false;
     $(".youre-up-container").css("display", "none");
     $(".time-background-block").css("background-color","#1c75bc");
 
@@ -273,7 +275,18 @@ $(document).ready(() => {
 
         for(var i = 0; i < queue.length; i++) {
           if(queue[i] != null){
+
+            if (i === 0) {
+              ls_1 += queue[i].time_remaining;
+            } else if (i === 0) {
+              ls_2 += queue[i].time_remaining;
+            } else {
+              ls_1 > ls_2 ? ls_2 += queue[i].cut_length : ls_1 += queue[i].cut_length;
+            }
+
+
             if(queue[i].email === userEmail) {
+              in_queue = true;
               changeTimer(queue[i].time_remaining);
               $(".join-queue-form").addClass("hidden");
               if(i === 0||i === 1) {
@@ -298,6 +311,28 @@ $(document).ready(() => {
             }
         }
         }
+
+      if (in_queue == false) {
+        changeTimer(Math.min(ls_1, ls_2));
+      }
+
+      // if (timeRemaining == -1) {
+      //   var last = 0;
+      //   var last_2 = 0;
+      //   if (queue[queue.length - 1] != null) {
+      //     last = queue[queue.length - 1].time_remaining;
+      //     if (queue.length - 1 > 1) last += queue[queue.length - 1].cut_length;
+      //   }
+      //   if (queue[queue.length - 2] != null) {
+      //     last_2 = queue[queue.length - 2].time_remaining;
+      //     if (queue.legnth - 2 > 1) last_2 += queue[queue.length - 2].cut_length;
+      //   }
+      //   if (last > last_2) {
+      //     changeTimer(last_2);
+      //   } else {
+      //     changeTimer(last);
+      //   }
+      // }
 
 
 
