@@ -287,11 +287,18 @@ $(document).ready(() => {
                 if(should_email === true){
                   socket.emit("up-next", userEmail);
                 }
+                addToQueue(i+1, queue[i].username,queue[i].time_remaining,"user");
+              } else {
+                  addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
               }
 
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
             } else {
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+              if(i === 0 || i === 1) {
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+              } else {
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
+              }
+
             }
         }
         }

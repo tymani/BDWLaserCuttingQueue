@@ -546,6 +546,8 @@ display: none;
 
 footer {
   position:fixed;
+  /* z-index: 300; */
+  background-color: white;
     bottom:0px;
     left:0px;
     right:0px;
@@ -625,6 +627,10 @@ footer p {
 
 .youre-up-title {
   font-family: "Avenir-Italic";
-  font-size: 45px;
+  font-size: 40px;
   margin: 20px;
+}
+
+.youre-up-title p {
+  font-size: 20px;
 }
