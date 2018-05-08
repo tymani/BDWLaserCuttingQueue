@@ -3,6 +3,7 @@ var userId = -1;
 var username;
 var userEmail;
 var socket = io.connect();
+var should_email = false;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -99,7 +100,7 @@ $(document).ready(() => {
     //on reconnection after disconnection server need to send updated queue
 
   function sendNewQueueUser(username,length, phone_number, email) {
-    socket.emit("join", username, length, phone_number, email, $("#email-notification-checkbox input")[0].checked);
+    socket.emit("join", username, length, phone_number, email);
   };
 
 
@@ -119,6 +120,11 @@ $(document).ready(() => {
      $("#join-queue-form-page").removeClass("hidden");
   });
 
+  // $("#monitor-button-form").click(function(){
+  //   $(".home-content").removeClass("stack-behind");
+  //    $("#monitor-password-form-page").removeClass("hidden");
+  // });
+
   /* Join Queue Form Disappear */
   //When outside the form is clicked
   $(".form-background").click(function() {
@@ -131,7 +137,8 @@ $(document).ready(() => {
 
   $('body').on('click', "#delete-queue-button",function () {
     $(".join-queue-form").removeClass("hidden");
-    $(".youre-up-title").addClass("hidden");
+    $(".youre-up-container").css("display", "none");
+    $(".time-background-block").css("background-color","#1c75bc");
     socket.emit('delete-user', userEmail);
   });
 
@@ -194,6 +201,7 @@ $(document).ready(() => {
         validForm = true;
 
         //add our user to the queue
+        //addToQueue(username, selectedTime,"user");
 
     }
 
@@ -222,7 +230,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    socket.emit('delete-user', userEmail);
+    // socket.emit('delete-user', userEmail);
     signOut();
 
   });
@@ -242,6 +250,13 @@ $(document).ready(() => {
 
   }
 
+  /* --------------------------------------------------- */
+
+  /* Phone Checkbox Form Interaction */
+  //phone number checkbox clicked
+  $("#email-notification-checkbox input").click(function () {
+    should_email = true;
+  });
 
   /* --------------------------------------------------- */
 
@@ -249,7 +264,8 @@ $(document).ready(() => {
 
   function renderQ(queue) {
     var timeRemaining = 0;
-    $(".youre-up-title").addClass("hidden");
+    $(".youre-up-container").css("display", "none");
+    $(".time-background-block").css("background-color","#1c75bc");
 
       while ($(".queue-table")[0].hasChildNodes()) {
         $(".queue-table")[0].removeChild($(".queue-table")[0].lastChild);
@@ -261,12 +277,24 @@ $(document).ready(() => {
               changeTimer(queue[i].time_remaining);
               $(".join-queue-form").addClass("hidden");
               if(i === 0||i === 1) {
-                $(".youre-up-title").removeClass("hidden");
+                //add youre up
+                $(".youre-up-container").css("display","flex");
+                $(".time-background-block").css("background-color","red");
+                if(should_email === true){
+                  socket.emit("up-next", userEmail);
+                }
+                addToQueue(i+1, queue[i].username,queue[i].time_remaining,"user");
+              } else {
+                  addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
               }
 
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
             } else {
-              addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+              if(i === 0 || i === 1) {
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+              } else {
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+              }
+
             }
         }
         }
@@ -342,8 +370,6 @@ function updateTimer(timeRemaining) {
 
 function changeTimer(newTime) {
   var timer = $(".timer-time")[0];
-  //stop old timer
-
   var minutes = 0;
   var hours = 0;
   //newTime is in minutes
@@ -363,8 +389,6 @@ function changeTimer(newTime) {
   currMin = minutes;
   currHour = hours;
 
-  //start ticking timer
-  //ticking = setInterval(function () {tickingTimer();}, 60000);
 
 
 
@@ -410,30 +434,6 @@ function printTimer(hours, minutes) {
 
   }
 }
-
-function tickingTimer() {
-
-  if(currMin > 0) {
-    currMin--;
-  } else if (currHour > 0) {
-    currHour--;
-    currMin = 59;
-  } else {
-    stopTickingTimer();
-    printEmptyQueuePage();
-    return;
-  }
-
-
-  printTimer(currHour, currMin);
-}
-
-function stopTickingTimer() {
-  if(ticking != null) {
-    clearInterval(ticking);
-  }
-}
-
 
 
 //make timeremaingin function
