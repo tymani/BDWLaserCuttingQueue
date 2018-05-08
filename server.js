@@ -121,18 +121,9 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('delete-user', function(userEmail) {
     console.log("should delete");
-    if(q.length === 2 && q[0] == null && q[1] == null) { // WARNING
-      if(ticking != null) {
-        clearInterval(ticking);
-      }
-  }
 
-  removeUser(userEmail);
-  socket.emit('deleted', ids.get(userEmail), q);
-
-
-
-
+    removeUser(userEmail);
+  // socket.emit('deleted', ids.get(userEmail), q);
   });
 
   socket.on('up-next', function(userEmail){
@@ -269,6 +260,12 @@ function pulltoCutter() {
 
   if (q.length < 3) {
     console.log("No person on the queue to pull")
+    if(q[0] == null && q[1] == null) { // WARNING
+      if(ticking != null) {
+        console.log("Queues and lasercutters are completely empty. Pausing server.")
+        clearInterval(ticking);
+      }
+    }
     return null;
   }
   var next_person = q[2];
