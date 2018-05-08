@@ -142,7 +142,7 @@ $(document).ready(() => {
   $('body').on('click', "#delete-queue-button",function () {
     console.log("delete");
     $(".join-queue-form").removeClass("hidden");
-    $(".youre-up-container").css("display", "none");
+    $(".youre-up-title").addClass("hidden");
     $(".time-background-block").css("background-color","#1c75bc");
     socket.emit('delete-user', userEmail);
   });
@@ -271,7 +271,7 @@ $(document).ready(() => {
 
   function renderQ(queue) {
     var timeRemaining = 0;
-    $(".youre-up-container").css("display", "none");
+    $(".youre-up-title").addClass("hidden");
     $(".time-background-block").css("background-color","#1c75bc");
 
       while ($(".queue-table")[0].hasChildNodes()) {
@@ -285,7 +285,7 @@ $(document).ready(() => {
               $(".join-queue-form").addClass("hidden");
               if(i === 0||i === 1) {
                 //add youre up
-                $(".youre-up-container").css("display","flex");
+                $(".youre-up-title").removeClass("hidden");
                 $(".time-background-block").css("background-color","red");
                 if(should_email === true){
                   socket.emit("up-next", userEmail);
@@ -299,7 +299,7 @@ $(document).ready(() => {
               if(i === 0 || i === 1) {
                 addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
               } else {
-                addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"user ");
               }
 
             }
