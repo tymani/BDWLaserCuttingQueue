@@ -26,6 +26,7 @@ var ids = new Map();
 
 var hr = (new Date()).getHours();
 
+// Setting time interval for
 var ticking;
 
 function sendEmail(userEmail){
@@ -105,7 +106,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('delete-user', function(userEmail) {
     console.log("should delete");
-    if(q.length === 2) { // WARNING
+    if(q.length === 2 && q[0] == null && q[1] == null) { // WARNING
       if(ticking != null) {
         clearInterval(ticking);
       }
@@ -275,11 +276,14 @@ function pulltoCutter() {
 
   q.splice(2,1);
 
-  io.sockets.emit('handshake', q) // Send the updated queue.
+  io.sockets.emit('handshake', q); // Send the updated queue.
 
-  setTimeout( finishCutting(n), next_person['cut_length']*60*1000, lc_num)
+  // No longer needed because ticktimer handles finish cutting automatically
+  // setTimeout( function() {
+  //   finishCutting(lc_num);
+  // }, next_person['cut_length']*60*1000);
 
-  return [user_em, lc_num]
+  return [user_em, lc_num];
 }
 
 function calculateTime() {
