@@ -4,7 +4,6 @@ var app = express();
 var server = http.createServer(app);
 var path = require('path');
 var http = require('http');
-// var anyDB = require('any-db');
 var env = require('dotenv/config');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
@@ -19,7 +18,7 @@ app.use("/", express.static(__dirname));
 var io = require('socket.io').listen(server);
 
 //Global variables for the BDW open hours in hh:mm:ss format
-var open = "14:00:00";//2pm 14:00:00
+var open = "00:00:00";//2pm 14:00:00
 var close = "23:59:59";//midnight
 
 var q = [null, null]; // WARNING: imp
