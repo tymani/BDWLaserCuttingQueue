@@ -28,7 +28,6 @@ $(document).ready(() => {
   /*******************************************************************/
 
     // Server emits this on connection to give initial state of the queue
-<<<<<<< HEAD
     socket.on('handshake', function(queue) {
       // var timeRemaining = 0;
       //
@@ -44,23 +43,6 @@ $(document).ready(() => {
       // }
       //
       // updateTimer(timeRemaining);
-=======
-    socket.on('handshake', function(queue, time) {
-      var timeRemaining = time;
-
-      for(var i = 0; i < queue.length; i++) {
-        if(queue[i] != null){
-          if(queue[i].userEmail != userEmail) {
-            timeRemaining = parseInt(queue[i].time_remaining);
-          } else {
-            break;
-          }
-      }
-
-      }
-
-      updateTimer(time);
->>>>>>> d66ff8085e8c448a9769d3ea00c3ced84f2739ce
       renderQ(queue);
     });
 
@@ -281,15 +263,10 @@ $(document).ready(() => {
   /* Webpage Interaction Util Functions */
 
   function renderQ(queue) {
-<<<<<<< HEAD
     var ls_1 = 0;
     var ls_2 = 0;
     var in_queue = false;
     $(".youre-up-container").css("display", "none");
-=======
-    var timeRemaining = 0;
-    $(".youre-up-title").addClass("hidden");
->>>>>>> d66ff8085e8c448a9769d3ea00c3ced84f2739ce
     $(".time-background-block").css("background-color","#1c75bc");
 
       while ($(".queue-table")[0].hasChildNodes()) {
