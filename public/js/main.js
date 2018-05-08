@@ -197,7 +197,7 @@ $(document).ready(() => {
     //check that necessary parts of form are filled in
     var validForm = false;
 
-    var selectedTime = $("select option:selected").val();
+    var selectedTime = parseInt($("select option:selected").val().slice(0,2).replace(/\s/,""));
     var selectTimeDefault = "Select Approx Time";
 
     if (selectedTime !== selectTimeDefault) {
