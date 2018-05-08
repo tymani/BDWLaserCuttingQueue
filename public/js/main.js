@@ -197,7 +197,7 @@ $(document).ready(() => {
     //check that necessary parts of form are filled in
     var validForm = false;
 
-    var selectedTime = parseInt($("select option:selected").val().slice(0,2).replace(/\s/,""));
+    var selectedTime = $("select option:selected");
     var selectTimeDefault = "Select Approx Time";
 
     if (selectedTime !== selectTimeDefault) {
@@ -223,7 +223,7 @@ $(document).ready(() => {
       $(".join-queue-form").addClass("hidden");
 
       //send info to server
-      sendNewQueueUser(username, selectedTime, null, userEmail);
+      sendNewQueueUser(username, parseInt(selectedTime.slice(0,2).replace(/\s/,"")), null, userEmail);
 
     }
 
@@ -305,7 +305,7 @@ $(document).ready(() => {
       newQueueElem = "<tr class='queue-elem-container selected'>"+
                             "<td class='queue-elem'>"+ num +"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
-                            "<td class='queue-elem'>"+cutLength+"</td>"+
+                            "<td class='queue-elem'>"+cutLength+" mins"+"</td>"+
                             "<td class='queue-elem delete-queue-elem'>"+
               									"<input class='bdw-button delete-button' id='delete-queue-button' value='Delete' type='button'>"+
               							"</td>"+
@@ -315,7 +315,7 @@ $(document).ready(() => {
       newQueueElem = "<tr class='queue-elem-container'>"+
                             "<td class='queue-elem'>"+num +"</td>"+
                             "<td class='queue-elem'>"+name+"</td>"+
-                            "<td class='queue-elem'>"+cutLength+"</td>"+
+                            "<td class='queue-elem'>"+cutLength+" mins"+"</td>"+
                             "<td class='queue-elem'></td>"+
                         "</tr>";
     }
@@ -367,8 +367,8 @@ function updateTimer(timeRemaining) {
 function changeTimer(newTime) {
   var timer = $(".timer-time")[0];
   //stop old timer
-  stopTickingTimer();
-
+  //stopTickingTimer();
+  console.log("CHANGE TIMER: NEW TIME: " + newTime);
 
   var minutes = 0;
   var hours = 0;
@@ -390,7 +390,7 @@ function changeTimer(newTime) {
   currHour = hours;
 
   //start ticking timer
-  ticking = setInterval(function () {tickingTimer();}, 60000);
+  //ticking = setInterval(function () {tickingTimer();}, 60000);
 
 
 
@@ -398,6 +398,8 @@ function changeTimer(newTime) {
 
 
 function printTimer(hours, minutes) {
+  console.log("HOURS: " + hours);
+  console.log("MINS: " + minutes);
   var timer = $(".timer-time");
   //remove current time
   while (timer[0].hasChildNodes()) {
