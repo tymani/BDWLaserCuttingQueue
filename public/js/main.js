@@ -37,7 +37,7 @@ $(document).ready(() => {
         if(queue[i] != null){
           console.log(queue[i]);
           if(queue[i].userEmail != userEmail) {
-            timeRemaining += parseInt(queue[i].cut_length);
+            timeRemaining = parseInt(queue[i].time_remaining);
           } else {
             break;
           }
@@ -66,8 +66,8 @@ $(document).ready(() => {
 
       for(var i = 0; i < queue.length; i++) {
         if(queue[i] != null){
-          if(queue[i].userid != userId) {
-            timeRemaining += parseInt(queue[i].cut_length);
+          if(queue[i].email != userEmail) {
+            timeRemaining = parseInt(queue[i].time_remaining);
           } else {
             break;
           }
@@ -88,8 +88,8 @@ $(document).ready(() => {
 
       for(var i = 0; i < queue.length; i++) {
         if(queue[i] != null){
-          if(queue[i].userid != userId) {
-            timeRemaining += parseInt(queue[i].cut_length);
+          if(queue[i].email != userEmail) {
+            timeRemaining = parseInt(queue[i].time_remaining);
           } else {
             break;
           }
