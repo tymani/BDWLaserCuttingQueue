@@ -197,7 +197,7 @@ $(document).ready(() => {
     //check that necessary parts of form are filled in
     var validForm = false;
 
-    var selectedTime = $("select option:selected");
+    var selectedTime = $("select option:selected").val();
     var selectTimeDefault = "Select Approx Time";
 
     if (selectedTime !== selectTimeDefault) {
@@ -223,7 +223,7 @@ $(document).ready(() => {
       $(".join-queue-form").addClass("hidden");
 
       //send info to server
-      sendNewQueueUser(username, parseInt(selectedTime.slice(0,2).replace(/\s/,"")), null, userEmail);
+      sendNewQueueUser(username, parseInt((selectedTime).slice(0,2).replace(/\s/,"")), null, userEmail);
 
     }
 
@@ -235,7 +235,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    // socket.emit('delete-user', userEmail);
+    socket.emit('delete-user', userEmail);
     signOut();
 
   });
