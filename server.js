@@ -128,9 +128,6 @@ io.sockets.on('connection', function(socket) {
   // socket.emit('deleted', ids.get(userEmail), q);
   });
 
-  // socket.on('should_email', function(userEmail){
-  //   sendEmail(userEmail);
-  // });
 }
 });
 
@@ -235,24 +232,6 @@ function finishCutting(c_num) {
   calculateTime();
 }
 
-
-/*
-  Function that generates random ID of length 10.
-  Currently not Used.
-*/
-function generateID() {
-  var id = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 10; i++)
-    id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  if (ids.has(id)) {
-    return generateID();
-  }
-  return id;
-}
-
 /*
   Function that 'pulls' the next person on the queue to start cutting.
   It checks if the cutter are empty and there exists a person on the queue to pull,
@@ -299,11 +278,6 @@ function pulltoCutter() {
 
 
   io.sockets.emit('handshake', q); // Send the updated queue.
-
-  // No longer needed because ticktimer handles finish cutting automatically
-  // setTimeout( function() {
-  //   finishCutting(lc_num);
-  // }, next_person['cut_length']*60*1000);
 
   return [user_em, lc_num];
 }

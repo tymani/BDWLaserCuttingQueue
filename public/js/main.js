@@ -3,7 +3,6 @@ var userId = -1;
 var username;
 var userEmail;
 var socket = io.connect();
-// var should_email = false;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -124,11 +123,6 @@ $(document).ready(() => {
      $("#join-queue-form-page").removeClass("hidden");
   });
 
-  // $("#monitor-button-form").click(function(){
-  //   $(".home-content").removeClass("stack-behind");
-  //    $("#monitor-password-form-page").removeClass("hidden");
-  // });
-
   /* Join Queue Form Disappear */
   //When outside the form is clicked
   $(".form-background").click(function() {
@@ -205,7 +199,6 @@ $(document).ready(() => {
         validForm = true;
 
         //add our user to the queue
-        //addToQueue(username, selectedTime,"user");
 
     }
 
@@ -235,7 +228,7 @@ $(document).ready(() => {
 
   $("#sign-out").click(function() {
     $(".join-queue-form").removeClass("hidden");
-    // socket.emit('delete-user', userEmail);
+    socket.emit('delete-user', userEmail);
     signOut();
 
   });
@@ -256,15 +249,6 @@ $(document).ready(() => {
 
   }
 
-  /* --------------------------------------------------- */
-
-  /* Phone Checkbox Form Interaction */
-  //phone number checkbox clicked
-  // $("#email-notification-checkbox input").click(function () {
-  //   should_email = true;
-  // });
-
-
 
   /* --------------------------------------------------- */
 
@@ -284,11 +268,7 @@ $(document).ready(() => {
               changeTimer(queue[i].time_remaining);
               $(".join-queue-form").addClass("hidden");
               if(i === 0||i === 1) {
-                //add youre up
                 $(".youre-up-title").removeClass("hidden");
-                // if(should_email === true){
-                //   socket.emit("should_email", userEmail);
-                // }
               }
 
               addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
