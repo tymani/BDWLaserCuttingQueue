@@ -104,7 +104,7 @@ io.sockets.on('connection', function(socket) {
       'id' : socket.id,
       'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
       'phone_number': pnum,
-      "time_remaining": null,
+      "time_remaining": parseInt(length, 10),
       'email' : email
     };
 
@@ -359,7 +359,7 @@ function tickCurrentUsers() {
       pulltoCutter();
       calculateTime();
     } else{
-      if(q[i].time_remaining >= 1){
+      if(q[i].time_remaining >= 2){
         q[i].time_remaining -= 1;
         calculateTime();
       } else {
