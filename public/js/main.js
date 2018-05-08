@@ -367,8 +367,6 @@ function updateTimer(timeRemaining) {
 
 function changeTimer(newTime) {
   var timer = $(".timer-time")[0];
-  //stop old timer
-  //stopTickingTimer();
   console.log("CHANGE TIMER: NEW TIME: " + newTime);
 
   var minutes = 0;
@@ -390,8 +388,6 @@ function changeTimer(newTime) {
   currMin = minutes;
   currHour = hours;
 
-  //start ticking timer
-  //ticking = setInterval(function () {tickingTimer();}, 60000);
 
 
 
@@ -440,32 +436,7 @@ function printTimer(hours, minutes) {
   }
 }
 
-function tickingTimer() {
 
-  if(currMin > 0) {
-    currMin--;
-  } else if (currHour > 0) {
-    currHour--;
-    currMin = 59;
-  } else {
-    stopTickingTimer();
-    printEmptyQueuePage();
-    return;
-  }
-
-
-  printTimer(currHour, currMin);
-}
-
-function stopTickingTimer() {
-  if(ticking != null) {
-    clearInterval(ticking);
-  }
-}
-
-function printEmptyQueuePage() {
-  console.log("TBD");
-}
 
 
 //make timeremaingin function
