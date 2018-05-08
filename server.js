@@ -4,7 +4,7 @@ var app = express();
 var server = http.createServer(app);
 var path = require('path');
 var http = require('http');
-var anyDB = require('any-db');
+// var anyDB = require('any-db');
 var env = require('dotenv/config');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
@@ -16,7 +16,7 @@ server.listen(8080, function () {
 
 app.use("/", express.static(__dirname));
 
-var conn = anyDB.createConnection('sqlite3://db/users.db');
+// var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 var io = require('socket.io').listen(server);
 
@@ -96,6 +96,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
 
+    if (ids.has(email)) return;
     ids.set(email, username);
 
     var cred = {
@@ -184,13 +185,13 @@ app.get('/', function(request, response){
 // Function that handles user signup.
 // Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
 // Inserts the credentials to server database and notifies the user if failed.
-app.post('/userJoin', function(req, res) {
-  var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
-  conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
-    if (err) res.status(500).render("Something went wrong. Try again");
-    else res.render('index.html', {form:true});
-  });
-});
+// app.post('/userJoin', function(req, res) {
+//   var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
+//   conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
+//     if (err) res.status(500).render("Something went wrong. Try again");
+//     else res.render('index.html', {form:true});
+//   });
+// });
 
 app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
@@ -198,11 +199,15 @@ app.get('*', function(request, response){
 
 // Function Declarations
 function removeUser(email) {
-  for (i = 2; i < q.length; i++) { // WARNING
+  for (i = 0; i < q.length; i++) { // WARNING
+    if (q[i] == null) continue;
     var entry = q[i];
     if (entry['email'] == email) {
-      q.splice(i, 1);
-      ids.delete(email);
+      if (i == 0 || i == 1) finishCutting(i);
+      else {
+        q.splice(i, 1);
+        ids.delete(email);
+      }
       io.sockets.emit('deleted', entry['username'], q);
       return;
     }
@@ -347,6 +352,9 @@ function tickCurrentUsers() {
   // Check first two entries - reserved for cutters
 
   for (var i = 0; i < 2; i++) {
+    if(i === 0 || i === 1){
+      q[i].cut_length -= 1;
+    }
     if (q[i] == null) {
       pulltoCutter();
       calculateTime();
