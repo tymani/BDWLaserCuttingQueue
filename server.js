@@ -352,6 +352,9 @@ function tickCurrentUsers() {
   // Check first two entries - reserved for cutters
 
   for (var i = 0; i < 2; i++) {
+    if(i === 0 || i === 1){
+      q[i].cut_length -= 1;
+    }
     if (q[i] == null) {
       pulltoCutter();
       calculateTime();
