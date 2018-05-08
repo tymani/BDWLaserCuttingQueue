@@ -203,7 +203,7 @@ function removeUser(email) {
     if (q[i] == null) continue;
     var entry = q[i];
     if (entry['email'] == email) {
-      if (i == 1 || i == 2) finishCutting(i);
+      if (i == 0 || i == 1) finishCutting(i);
       else {
         q.splice(i, 1);
         ids.delete(email);
