@@ -296,7 +296,7 @@ $(document).ready(() => {
               if(i === 0 || i === 1) {
                 addToQueue(i+1, queue[i].username,queue[i].cut_length,"non-user");
               } else {
-                addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
+                addToQueue(i+1, queue[i].username,queue[i].cut_length,"user ");
               }
 
             }

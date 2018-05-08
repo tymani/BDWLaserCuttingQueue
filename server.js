@@ -4,7 +4,6 @@ var app = express();
 var server = http.createServer(app);
 var path = require('path');
 var http = require('http');
-// var anyDB = require('any-db');
 var env = require('dotenv/config');
 const nodemailer = require('nodemailer');
 const xoauth2 = require('xoauth2');
@@ -16,16 +15,13 @@ server.listen(8080, function () {
 
 app.use("/", express.static(__dirname));
 
-// var conn = anyDB.createConnection('sqlite3://db/users.db');
-
 var io = require('socket.io').listen(server);
 
 //Global variables for the BDW open hours in hh:mm:ss format
-var open = "14:00:00";//2pm 14:00:00
+var open = "00:00:00";//2pm 14:00:00
 var close = "23:59:59";//midnight
 
 var q = [null, null]; // WARNING: imp
-//var ls_1, ls_2;
 var ids = new Map();
 
 var hr = (new Date()).getHours();
@@ -95,7 +91,7 @@ io.sockets.on('connection', function(socket) {
     socket.emit('handshake', q);
   });
 
-  socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
+  socket.on('join', function(username, length, pnum, email, should_email) { // Fired by client when it joins the queue
 
     if (ids.has(email)) return;
     ids.set(email, username);
@@ -103,10 +99,11 @@ io.sockets.on('connection', function(socket) {
     var cred = {
       'username': username,
       'id' : socket.id,
-      'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
+      'cut_length' : parseInt(length, 10),
       'phone_number': pnum,
       "time_remaining": parseInt(length, 10),
-      'email' : email
+      'email' : email,
+      'should_email' : should_email
     };
 
     q.push(cred);
@@ -122,14 +119,9 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('delete-user', function(userEmail) {
-
     removeUser(userEmail);
-  // socket.emit('deleted', ids.get(userEmail), q);
   });
 
-  // socket.on('up-next', function(userEmail){
-  //   sendEmail(userEmail);
-  // });
 }
 });
 
@@ -167,7 +159,8 @@ function isItOpen(){
       return false;
     }
   }
-  else{//the rest of the hours
+  else{
+    //the rest of the hours
     if(time>=open && time<=close){
       return true;
     }
@@ -181,17 +174,6 @@ app.get('/', function(request, response){
     console.log('- Request received:', request.method, request.url);
     response.sendFile(path.join(__dirname + '/index.html'));
 });
-
-// Function that handles user signup.
-// Takes Post request '.../userJoin and with parameters name, email, isbrown(0 or 1 boolean)
-// Inserts the credentials to server database and notifies the user if failed.
-// app.post('/userJoin', function(req, res) {
-//   var stmt = "INSERT INTO user(name, email, isbrown) VALUES($1, $2, $3)";
-//   conn.query(stmt, [req.body.name, req.body.email, req.body.isbrown], function(err, res) {
-//     if (err) res.status(500).render("Something went wrong. Try again");
-//     else res.render('index.html', {form:true});
-//   });
-// });
 
 app.get('*', function(request, response){
   response.status(404).send('<h1>Error: 404</h1>');
@@ -234,24 +216,6 @@ function finishCutting(c_num) {
   calculateTime();
 }
 
-
-/*
-  Function that generates random ID of length 10.
-  Currently not Used.
-*/
-function generateID() {
-  var id = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 10; i++)
-    id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  if (ids.has(id)) {
-    return generateID();
-  }
-  return id;
-}
-
 /*
   Function that 'pulls' the next person on the queue to start cutting.
   It checks if the cutter are empty and there exists a person on the queue to pull,
@@ -292,14 +256,12 @@ function pulltoCutter() {
 
   q.splice(2,1);
 
-  // sendEmail(user_em, lc_num + 1);
+  if(next_person['should_email']) {
+    sendEmail(user_em, lc_num + 1);
+  }
+
 
   io.sockets.emit('handshake', q); // Send the updated queue.
-
-  // No longer needed because ticktimer handles finish cutting automatically
-  // setTimeout( function() {
-  //   finishCutting(lc_num);
-  // }, next_person['cut_length']*60*1000);
 
   return [user_em, lc_num];
 }
@@ -326,28 +288,6 @@ function calculateTime() {
   }
 
   io.sockets.emit("handshake",q);
-
-  // for (var i = 0; i < q.length; i++){
-  //   if (i === 0){
-  //     lasercutter_1 += q[i].cut_length;
-  //     ls_1.push(q[i]);
-  //     q[i].time_remaining = lasercutter_1;
-  //   } else if (i === 1) {
-  //     lasercutter_2 += q[i].cut_length;
-  //     ls_2.push(q[i]);
-  //     q[i].time_remaining = lasercutter_2;
-  //   } else {
-  //     if(lasercutter_1 > lasercutter_2) {
-  //       lasercutter_2 += q[i].cut_length;
-  //       ls_2.push(q[i]);
-  //       q[i].time_remaining = lasercutter_2;
-  //     }else{
-  //       lasercutter_1 += q[i].cut_length;
-  //       ls_1.push(q[i]);
-  //       q[i].time_remaining = lasercutter_1;
-  //     }
-  //   }
-  // }
 }
 
 function tickCurrentUsers() {
@@ -369,30 +309,4 @@ function tickCurrentUsers() {
       }
     }
   }
-
-  // if (q.length === 2) {
-  //   if(q[0].time_remaining >= 5){
-  //     q[0].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  // } else if (q.length >= 2) {
-  //   if(q[0].time_remaining >= 5){
-  //     q[0].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  //
-  //   if(q[1].time_remaining >= 5){
-  //     q[1].time_remaining -= 5;
-  //     calculateTime();
-  //     socket.emit("handshake",q);
-  //   } else {
-  //     pulltoCutter();
-  //   }
-  // }
 }
