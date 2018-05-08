@@ -635,9 +635,16 @@ footer p {
 .youre-up-title {
   font-family: "Avenir-Italic";
   font-size: 40px;
-  margin: 20px;
+  /* margin: 20px; */
+  display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .youre-up-title p {
+  margin: 0;
+  color: #1c75bc;
+  font-variant: small-caps;
   font-size: 20px;
+  font-family: "Roboto-Regular"
 }
