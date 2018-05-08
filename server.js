@@ -95,7 +95,7 @@ io.sockets.on('connection', function(socket) {
     socket.emit('handshake', q);
   });
 
-  socket.on('join', function(username, length, pnum, email) { // Fired by client when it joins the queue
+  socket.on('join', function(username, length, pnum, email, should_email) { // Fired by client when it joins the queue
 
     if (ids.has(email)) return;
     ids.set(email, username);
@@ -106,7 +106,8 @@ io.sockets.on('connection', function(socket) {
       'cut_length' : parseInt(length, 10), // needed to change this bc .length is already a function
       'phone_number': pnum,
       "time_remaining": parseInt(length, 10),
-      'email' : email
+      'email' : email,
+      'should_email' : should_email
     };
 
     q.push(cred);
@@ -127,7 +128,7 @@ io.sockets.on('connection', function(socket) {
   // socket.emit('deleted', ids.get(userEmail), q);
   });
 
-  // socket.on('up-next', function(userEmail){
+  // socket.on('should_email', function(userEmail){
   //   sendEmail(userEmail);
   // });
 }
@@ -292,7 +293,10 @@ function pulltoCutter() {
 
   q.splice(2,1);
 
-  // sendEmail(user_em, lc_num + 1);
+  if(next_person['should_email']) {
+    sendEmail(user_em, lc_num + 1);
+  }
+
 
   io.sockets.emit('handshake', q); // Send the updated queue.
 

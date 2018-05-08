@@ -3,7 +3,7 @@ var userId = -1;
 var username;
 var userEmail;
 var socket = io.connect();
-var should_email = false;
+// var should_email = false;
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -104,7 +104,7 @@ $(document).ready(() => {
     //on reconnection after disconnection server need to send updated queue
 
   function sendNewQueueUser(username,length, phone_number, email) {
-    socket.emit("join", username, length, phone_number, email);
+    socket.emit("join", username, length, phone_number, email, $("#email-notification-checkbox input")[0].checked);
   };
 
 
@@ -260,9 +260,11 @@ $(document).ready(() => {
 
   /* Phone Checkbox Form Interaction */
   //phone number checkbox clicked
-  $("#email-notification-checkbox input").click(function () {
-    should_email = true;
-  });
+  // $("#email-notification-checkbox input").click(function () {
+  //   should_email = true;
+  // });
+
+
 
   /* --------------------------------------------------- */
 
@@ -284,9 +286,9 @@ $(document).ready(() => {
               if(i === 0||i === 1) {
                 //add youre up
                 $(".youre-up-title").removeClass("hidden");
-                if(should_email === true){
-                  socket.emit("up-next", userEmail);
-                }
+                // if(should_email === true){
+                //   socket.emit("should_email", userEmail);
+                // }
               }
 
               addToQueue(i+1, queue[i].username,queue[i].cut_length,"user");
