@@ -93,8 +93,8 @@ io.sockets.on('connection', function(socket) {
 
     q.push(cred);
 
-    tickCurrentUsers();
     if(q.length === 3) { // WARNING queue implementation
+      tickCurrentUsers();
       ticking = setInterval(function () {tickCurrentUsers();}, (5*60000));
     }
 
