@@ -124,10 +124,10 @@ $(document).ready(() => {
      $("#join-queue-form-page").removeClass("hidden");
   });
 
-  $("#monitor-button-form").click(function(){
-    $(".home-content").removeClass("stack-behind");
-     $("#monitor-password-form-page").removeClass("hidden");
-  });
+  // $("#monitor-button-form").click(function(){
+  //   $(".home-content").removeClass("stack-behind");
+  //    $("#monitor-password-form-page").removeClass("hidden");
+  // });
 
   /* Join Queue Form Disappear */
   //When outside the form is clicked
