@@ -20,6 +20,10 @@ var conn = anyDB.createConnection('sqlite3://db/users.db');
 
 var io = require('socket.io').listen(server);
 
+//Global variables for the BDW open hours in hh:mm:ss format
+var open = "14:00:00";//2pm 14:00:00
+var close = "23:59:59";//midnight
+
 var q = [null, null]; // WARNING: imp
 //var ls_1, ls_2;
 var ids = new Map();
@@ -138,6 +142,7 @@ function getTime(){
   var m = today.getMinutes();
   var s = today.getSeconds();
 
+  h = checkTime(h);
   m = checkTime(m);
   s = checkTime(s);
   var time = h + ":" + m + ":" + s;
@@ -149,8 +154,6 @@ function isItOpen(){
   var d = new Date();
   var day = d.getDay();
   var time = getTime();
-  var open = "14:00:00";//2pm 14:00:00
-  var close = "23:59:59";//midnight
   var Fridayclose = "20:00:00";//8pm
   if(day==5){//Friday hours
     if(time>=open && time<=Fridayclose){
