@@ -103,6 +103,19 @@ header > div {
   width: 450px;
   height: 100px;
   box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.29);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.timer-time {
+  color: white;
+  font-family: 'Avenir-Italic';
+  font-size: 40pt;
+}
+
+.timer-subtitle {
+  font-family: 'Roboto-Regular';
+  color: grey;
 }
 
 .timer-bottom {
@@ -110,6 +123,9 @@ header > div {
   height: 40px;
   border-radius: 0px 0px 5px 5px;
   box-shadow: 0px 5px 2px 0px rgba(0,0,0,0.29);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lasercutter-content-container {
@@ -184,7 +200,6 @@ header > div {
 }
 
 .queue-table {
-  margin: 20px;
   border-collapse: collapse;
   width: 70vw;
 }
@@ -200,13 +215,34 @@ header > div {
 .queue-elem-container {
   font-family: "Roboto-Regular";
   color:  #606060;
-  /* border: 1px solid #1c75bc; */
   border: 1px solid grey;
   text-align: center;
   height: 50px;
 
 }
 
+.queue-elem {
+  padding: 10px;
+}
+
+.delete-queue-elem {
+  display: flex;
+  justify-content: center;
+}
+
+.delete-button {
+  border: 1px solid red;
+  color: red;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: transparent;
+}
+
+.delete-button:hover {
+  background-color: red;
+  color: white;
+}
 
 footer {
   border-top: 1px solid lightgrey;
