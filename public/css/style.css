@@ -11,3 +11,212 @@
   font-family: 'Roboto-Regular';
   src: url('fonts/Roboto-Regular.ttf');
 }
+
+body {
+  margin: 0;
+}
+
+.body-content {
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  height: 14vh;
+  border-bottom: 1px solid lightgrey;
+}
+
+header > div {
+  width: 50vw;
+}
+
+.logo-content-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-content {
+  display: flex;
+  margin-left: 20px;
+}
+
+.logo-content > div {
+  margin: 5px;
+}
+
+.logo-img {
+  height: 50px;
+  width: 50px;
+}
+
+.logo-text {
+  font-family:'Avenir-Black';
+  color: #606060;
+}
+
+.bdw-button {
+  display: block;
+  cursor: pointer;
+  border: 1px solid grey;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: grey;
+  font-family: 'Roboto-Regular';
+  font-size: 10pt;
+  border-radius: 5px;
+}
+
+.bdw-button:hover {
+  color: white;
+  background-color: grey;
+}
+
+.header-button-content-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header-button-content-container > input {
+  margin-right: 20px;
+}
+
+/* .header-button-content-container input {
+  margin-left: auto;
+} */
+
+.timer-content-container {
+  margin: 50px;
+}
+
+.timer-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.timer-top {
+  background-color: #1c74bb;
+  border-radius: 5px 5px 0px 0px;
+  width: 450px;
+  height: 100px;
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.29);
+}
+
+.timer-bottom {
+  width: 450px;
+  height: 40px;
+  border-radius: 0px 0px 5px 5px;
+  box-shadow: 0px 5px 2px 0px rgba(0,0,0,0.29);
+}
+
+.lasercutter-content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lasercutter-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lasercutter-module {
+  margin: 45px;
+  margin-top: 0px;
+}
+
+.lasercutter-block {
+  display: flex;
+}
+
+
+.lasercutter-title {
+  font-family: 'Roboto-Regular';
+  color: grey;
+  margin-bottom: 15px;
+}
+
+.lasercutter-block-left {
+  height: 50px;
+  width: 50px;
+  box-shadow: 0px 5px 2px 0px rgba(0,0,0,0.29);
+  border-radius: 5px 0px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.person-icon {
+  width: 16px;
+  height: 19px;
+}
+
+
+
+.lasercutter-block-right {
+  font-family: 'Roboto-Regular';
+  display: flex;
+  align-items: center;
+  color: white;
+  background-color: #1c74bb;
+  height: 50px;
+  border-radius: 0px 5px 5px 0px;
+  /* padding: 10px; */
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0px 5px 2px 0px rgba(0,0,0,0.29);
+
+}
+
+.queue-content-container {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+.queue-header {
+  font-family: 'Avenir-Black';
+  color: grey;
+}
+
+.queue-table {
+  margin: 20px;
+  border-collapse: collapse;
+  width: 70vw;
+}
+
+.queue-header-elem {
+  padding: 10px;
+}
+
+.queue-elem-num {
+  width: 1vw;
+}
+
+.queue-elem-container {
+  font-family: "Roboto-Regular";
+  color:  #606060;
+  /* border: 1px solid #1c75bc; */
+  border: 1px solid grey;
+  text-align: center;
+  height: 50px;
+
+}
+
+
+footer {
+  border-top: 1px solid lightgrey;
+  height: 13vh;
+  display: flex;
+  align-items: center;
+}
+
+.footer-title {
+  font-family: 'Roboto-Regular';
+  color: grey;
+  margin: 20px;
+}

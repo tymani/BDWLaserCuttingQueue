@@ -17,9 +17,10 @@
 		<div class="all-content">
 			<!-- HEADER [START] -->
 			<header>
-				<div class="logo-content">
+				<div class="logo-content-container">
+					<div class="logo-content">
 					<div class="logo-img-container">
-						<img src="public/img/bdw-logo.png">
+						<img class="logo-img" src="public/img/bdw-logo.png">
 					</div>
 					<div class="logo-text-container">
 						<div class="logo-text">Brown</div>
@@ -27,16 +28,73 @@
 						<div class="logo-text">Workshop</div>
 					</div>
 				</div>
+			</div>
 				<div class="header-button-content-container">
+					<input class="bdw-button" value="Sign In" type="button">
 				</div>
 			</header>
 			<!-- HEADER [END] -->
 			<!-- BODY [START] -->
 			<div class="body-content">
+				<!-- TIMER [START] -->
+				<div class="timer-content-container">
+					<div class="timer-block">
+						<div class="timer-top">
+						</div>
+						<div class="timer-bottom">
+						</div>
+					</div>
+				</div>
+				<!-- TIMER [END] -->
+				<!-- LASERCUTTER [START] -->
+				<div class="lasercutter-content-container">
+					<div class="lasercutter-content">
+						<div class="lasercutter-module">
+							<div class="lasercutter-title">Lasercutter 1</div>
+							<div class="lasercutter-block">
+								<div class="lasercutter-block-left">
+									<img src="public/img/person-icon.png" class="person-icon">
+								</div>
+								<div class="lasercutter-block-right">Jane Doe</div>
+							</div>
+						</div>
+						<div class="lasercutter-module">
+							<div class="lasercutter-title">Lasercutter 2</div>
+							<div class="lasercutter-block">
+								<div class="lasercutter-block-left">
+									<img src="public/img/person-icon.png" class="person-icon">
+								</div>
+								<div class="lasercutter-block-right">Johnathan Doe</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- LASERCUTTER [END] -->
+				<!-- QUEUE [START] -->
+				<div class="queue-content-container">
+					<table class="queue-table">
+						<tr class="queue-header">
+							<th class="queue-header-elem queue-elem-num">No.</th>
+							<th class="queue-header-elem">Name</th>
+							<th class="queue-header-elem">Length of Cut</th>
+							<th></th>
+						</tr>
+						<tr class='queue-elem-container selected'>
+              <td class='queue-elem'>1</td>
+              <td class='queue-elem'>Bella Ratchford</td>
+              <td class='queue-elem'>10 mins</td>
+              <td class='queue-elem delete-queue-elem'>
+              		<input class='bdw-button delete-button' id='delete-queue-button' value='Delete' type='button'>
+              </td>
+            </tr>
+					</table>
+				</div>
 			</div>
 			<!-- BODY [END] -->
 			<!-- FOOTER [START] -->
 			<footer>
+				<div class="footer-title">BDW Lasercutting Queue</div>
+				<iframe src="https://ghbtns.com/github-btn.html?user=tymani&repo=BDWLasercuttingQueue&type=star&count=true" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
 			</footer>
 			<!-- FOOTER [END] -->
 		</div>
