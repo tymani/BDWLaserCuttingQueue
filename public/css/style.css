@@ -16,8 +16,14 @@ body {
   margin: 0;
 }
 
+.all-content {
+  position: relative;
+}
+
 .body-content {
   min-height: 100vh;
+  overflow: auto;
+  position: relative;
 }
 
 header {
@@ -156,6 +162,19 @@ header > div {
   margin-bottom: 15px;
 }
 
+.lasercutter-subtitle {
+  font-family: 'Roboto-Regular';
+  color: grey;
+  /* margin-top: 20px;
+  margin-bottom: 20px; */
+}
+
+.lasercutter-subtitle-block {
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
 .lasercutter-block-left {
   height: 50px;
   width: 50px;
@@ -187,6 +206,7 @@ header > div {
   box-shadow: 0px 5px 2px 0px rgba(0,0,0,0.29);
 
 }
+
 
 .queue-content-container {
   display: flex;
@@ -244,11 +264,19 @@ header > div {
   color: white;
 }
 
+.queue-title {
+    font-family: 'Roboto-Regular';
+    color: grey;
+}
+
 footer {
   border-top: 1px solid lightgrey;
   height: 13vh;
   display: flex;
   align-items: center;
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
 }
 
 .footer-title {

@@ -3,11 +3,10 @@
 	<head>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="public/css/style.css">
-		<meta name="username" content="">
-		<script src="public/js/jquery-2.1.1.js"></script>
+		<script src="../public/js/jquery-2.1.1.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="public/js/main.js"></script>
-		<link href="public/img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
+		<script src="../public/js/main.js"></script>
+		<link href="../public/img/bdw-logo.png" rel="shortcut icon" type="image/x-icon">
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<title> BDW Lasercuttering Queue </title>
 		<meta name="google-signin-client_id" content="710331240051-v1ntjh3jb8muk36e3lsr98fooojbllob.apps.googleusercontent.com">
@@ -20,7 +19,7 @@
 				<div class="logo-content-container">
 					<div class="logo-content">
 					<div class="logo-img-container">
-						<img class="logo-img" src="public/img/bdw-logo.png">
+						<img class="logo-img" src="../public/img/bdw-logo.png">
 					</div>
 					<div class="logo-text-container">
 						<div class="logo-text">Brown</div>
@@ -37,6 +36,7 @@
 			<!-- BODY [START] -->
 			<div class="body-content">
 				<!-- TIMER [START] -->
+				{{#timer}}
 				<div class="timer-content-container">
 					<div class="timer-block">
 						<div class="timer-top">
@@ -47,33 +47,54 @@
 						</div>
 					</div>
 				</div>
+				{{/timer}}
 				<!-- TIMER [END] -->
 				<!-- LASERCUTTER [START] -->
+				{{#lasercutter}}
 				<div class="lasercutter-content-container">
 					<div class="lasercutter-content">
 						<div class="lasercutter-module">
 							<div class="lasercutter-title">Lasercutter 1</div>
+							{{^lasercutter_1_block}}
+							<div class="lasercutter-subtitle-block">
+								<div class="lasercutter-subtitle">No one currently at lasercutter</div>
+							</div>
+							{{/lasercutter_1_block}}
+							{{#lasercutter_1_block}}
 							<div class="lasercutter-block">
 								<div class="lasercutter-block-left">
-									<img src="public/img/person-icon.png" class="person-icon">
+									<img src="../public/img/person-icon.png" class="person-icon">
 								</div>
-								<div class="lasercutter-block-right">Jane Doe</div>
+								<div class="lasercutter-block-right">{{lasercutter_1_name}}</div>
 							</div>
+							{{/lasercutter_1_block}}
 						</div>
 						<div class="lasercutter-module">
 							<div class="lasercutter-title">Lasercutter 2</div>
+							{{^lasercutter_2_block}}
+							<div class="lasercutter-subtitle-block">
+								<div class="lasercutter-subtitle">No one currently at lasercutter</div>
+							</div>
+							{{/lasercutter_2_block}}
+							{{#lasercutter_2_block}}
 							<div class="lasercutter-block">
 								<div class="lasercutter-block-left">
-									<img src="public/img/person-icon.png" class="person-icon">
+									<img src="../public/img/person-icon.png" class="person-icon">
 								</div>
-								<div class="lasercutter-block-right">Johnathan Doe</div>
+								<div class="lasercutter-block-right">{{lasercutter_2_name}}</div>
 							</div>
+							{{/lasercutter_2_block}}
 						</div>
 					</div>
 				</div>
+				{{/lasercutter}}
 				<!-- LASERCUTTER [END] -->
 				<!-- QUEUE [START] -->
 				<div class="queue-content-container">
+					{{^queue}}
+						<div class="queue-title">{{queue_status}}</title>
+					{{/queue}}
+					{{#queue}}
 					<table class="queue-table">
 						<tr class="queue-header">
 							<th class="queue-header-elem queue-elem-num">No.</th>
@@ -81,25 +102,35 @@
 							<th class="queue-header-elem">Length of Cut</th>
 							<th></th>
 						</tr>
+						{{^queue_elem_selected}}
 						<tr class='queue-elem-container selected'>
-              <td class='queue-elem'>1</td>
-              <td class='queue-elem'>Bella Ratchford</td>
-              <td class='queue-elem'>10 mins</td>
+              <td class='queue-elem'>{{queue_num}}</td>
+              <td class='queue-elem'>{{queue_name}}</td>
+              <td class='queue-elem'>{{queue_time}}</td>
               <td class='queue-elem delete-queue-elem'>
               		<input class='bdw-button delete-button' id='delete-queue-button' value='Delete' type='button'>
               </td>
             </tr>
+						{{/queue_elem_selected}}
+						{{#queue_elem_selected}}
+						<tr class='queue-elem-container'>
+              <td class='queue-elem'>{{queue_num}}</td>
+              <td class='queue-elem'>{{queue_name}}</td>
+              <td class='queue-elem'>{{queue_time}}</td>
+            </tr>
+						{{/queue_elem_selected}}
 					</table>
+					{{/queue}}
 				</div>
 			</div>
 			<!-- BODY [END] -->
-			<!-- FOOTER [START] -->
-			<footer>
-				<div class="footer-title">BDW Lasercutting Queue</div>
-				<iframe src="https://ghbtns.com/github-btn.html?user=tymani&repo=BDWLasercuttingQueue&type=star&count=true" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
-			</footer>
-			<!-- FOOTER [END] -->
 		</div>
+		<!-- FOOTER [START] -->
+		<footer>
+			<div class="footer-title">BDW Lasercutting Queue</div>
+			<iframe src="https://ghbtns.com/github-btn.html?user=tymani&repo=BDWLasercuttingQueue&type=star&count=true" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
+		</footer>
+		<!-- FOOTER [END] -->
 	<!-- ALL CONTENT [END] -->
 	</body>
 
